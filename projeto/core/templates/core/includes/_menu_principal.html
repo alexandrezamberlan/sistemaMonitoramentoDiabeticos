@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{% url 'home' %}">TFG Online</a>
+      <a class="navbar-brand" href="{% url 'home' %}">SOMDiabetes</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -20,48 +20,51 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'cog' %} Gestão básica <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{% url 'aluno_list' %}" >Alunos</a></li>
             <li><a href="{% url 'usuario_list' %}" >Todos Usuários</a></li>
+            <li><a href="" >Clientes</a></li>
+            <li><a href="" >Educadores físicos</a></li>
+            <li><a href="" >Médicos</a></li>
+            <li><a href="" >Nutricionistas</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="{% url 'curso_list' %}">Cursos</a></li>
-            <li><a href="{% url 'disciplina_list' %}">Disciplinas</a></li>
-            <li><a href="{% url 'turma_list' %}">Turmas</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{% url 'documento_list' %}">Documentos</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="">Critérios de Avaliação - em breve</a></li>
+            <li><a href="" >Alimentos</a></li>
+            <li><a href="" >Atividades físicas</a></li>
+            <li><a href="" >Medicamentos</a></li>
           </ul>
         </li>
         
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'list-alt' %} Submissões de TFG <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'cutlery' %} Registrar refeição <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{% url 'submissao_andamento_list' %}">Em andamento</a></li>
-            <li><a href="{% url 'submissao_list' %}">Todas</a></li>            
+            <li><a href="">Agora</a></li>
+            <li><a href="">Outra hora</a></li>            
           </ul>
         </li> 
 
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'check' %} Avaliações de TFG <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'fire' %} Registrar atividade física <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{% url 'avaliacao_andamento_list' %}">Em andamento</a></li>
-            <li><a href="{% url 'avaliacao_list' %}">Todas</a></li>
+            <li><a href="">Agora</a></li>
+            <li><a href="">Outra hora</a></li>
           </ul>
         </li> 
 
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'briefcase' %} Orientações de TFG <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'briefcase' %} Registrar medicamento <span class="caret"></span></a>
           <ul class="dropdown-menu">
-             <li><a href="">Atas de orientação - em breve</a></li>
+            <li><a href="">Agora</a></li>
+            <li><a href="">Outra hora</a></li>
           </ul>
         </li> 
         
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'certificate' %} Coordenação TFG <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'certificate' %} Monitorar saúde <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="">Gerar horários das bancas  - em breve</a></li>
+            <li><a href="">Registrar glicemia</a></li>
+            <li><a href="">Registrar qualidade do sono </a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="{% url 'impressao_avaliacao_list' %}">Pareceres, Requerimentos e Termos</a></li>
+            <li><a href="">Relatório dia</a></li>
+            <li><a href="">Relatório semanal</a></li>
+            <li><a href="">Outros relatórios</a></li>
           </ul>
         </li>
         
