@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'easy_pdf',
     'mail_templated',
     'widget_tweaks',
+    
+    'atividade_fisica',
     'usuario'
 ]
 
