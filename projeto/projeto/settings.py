@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'mail_templated',
     'widget_tweaks',
     
+    'alimento',
     'atividade_fisica',
     'usuario'
 ]
