@@ -1,0 +1,25 @@
+{% extends 'appaluno/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block title %}
+      <img src="{% static 'core/img/logoUFN_hor.jpg' %}"
+      class="img-responsive" style="max-width: 120px;">
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+      <center>
+            <h2>Sistema de Gestão<br>Trabalhos Finais de Graduação</h2>
+            
+            <img src="{% static 'core/img/logoTFGOnline.png' %}"
+                   class="img-responsive" style="max-width: 200px;">
+            
+            <h3>{{ user.curso.nome|upper }}</h3>
+
+            <h2>Visão do Aluno </h2>
+	</center>
+{% endif %}
+
+{% endblock %}

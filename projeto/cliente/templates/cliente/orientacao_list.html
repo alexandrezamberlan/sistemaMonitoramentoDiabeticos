@@ -1,0 +1,57 @@
+{% extends 'appaluno/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+	{% bootstrap_icon 'briefcase' %} Atas das reuniões entre aluno e orientador
+{% endblock %}
+
+{% block content %}
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    <a href="{% url 'appaluno_orientacao_create' %}" class="btn btn-md btn-primary">{% bootstrap_icon 'floppy-disk' %} Cadastrar Reunião</a>
+	  </div>
+	</div>
+	<table class="table table-hover">
+  		<thead>
+			<th>Data</th>
+			<th>Hora</th>
+			<th>Pauta</th>
+			<th class="text-center">Orientador validou?</th>
+			<th class="text-center">Visualizar</th>
+  			<th class="text-center">Editar</th>
+  		</thead>
+		
+  		<tbody>
+			{% for orientacao in object_list %}
+				<tr>
+					<td>{{ orientacao.data|date:'d/m/Y' }}</td>
+					<td>{{ orientacao.hora }}</td>
+					<td>{{ orientacao.pauta }}</td>
+					<td  class="text-center">
+						{% if orientacao.validada %}
+							<div class="btn btn-sm btn-success">
+								{% bootstrap_icon 'thumbs-up' size='sm'%}
+							</div>
+						{% else %}
+							<div class="btn btn-sm btn-warning">
+								{% bootstrap_icon 'thumbs-down' size='sm'%}
+							</div>
+						{% endif %}
+					</td>
+					<td class="text-center"> 
+						<span  data-toggle="tooltip"  title='Visualizar ata'>
+							{% bootstrap_button content='' href=orientacao.get_appaluno_visualiza_url button_type='link' icon='eye-open' button_class='btn btn-success' size='sm' %}
+						</span>
+					</td>
+					<td class="text-center">
+						<span  data-toggle="tooltip"  title='Editar'>
+							{% if not orientacao.validada %}
+								{% bootstrap_button content='' href=orientacao.get_appaluno_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}
+							{% endif %} 
+						</span>
+					</td>
+				</tr>
+			{% endfor %}
+  		</tbody>
+	</table>
+{% endblock %}

@@ -33,6 +33,10 @@ class Usuario(AbstractBaseUser):
         ('EDUCADOR FÍSICO', 'Educador Físico' ),
         ('DEGUSTANDO', 'Degustando' ),
     ) 
+    TIPO_SEXO = (
+        ('MASCULINO', 'Masculino'),
+        ('FEMININO', 'Feminino'),
+    )
 
     USERNAME_FIELD = 'email'
 
@@ -41,7 +45,13 @@ class Usuario(AbstractBaseUser):
     email = models.EmailField(_('Email'), unique=True, max_length=100, db_index=True)
     cpf = models.CharField(_('CPF *'),max_length=14,help_text='ATENÇÃO: Somente os NÚMEROS')
     fone = models.CharField(_('Celular par contato *'),max_length=14, help_text='ATENÇÃO: Somente os NÚMEROS')
-    
+
+    data_nascimento = models.DateField(_("Data de nascimento *"), null=True, blank=True, auto_now=False, auto_now_add=False, help_text='dd/mm/aaaa')
+    sexo = models.CharField(_('Sexo *'), max_length=10, choices=TIPO_SEXO, null=True, blank=True, help_text='Campo obrigatório para cálculo de gasto energético/calórico e consumo alimentar')    
+    peso = models.DecimalField(_('Peso (Kg) *'), max_digits=5, decimal_places=2, null=True, blank=True,)
+    altura = models.DecimalField(_('Altura (metros) *'), max_digits=3, decimal_places=2, null=True, blank=True,) 
+    imc = models.DecimalField(_('Índice de Massa Corporal (calculado)'), max_digits=3, decimal_places=2,null=True, blank=True,) 
+    percentual_gordura = models.DecimalField(_('Percentual de gordura (%)'), max_digits=3, decimal_places=2,null=True, blank=True,) 
     
     is_active = models.BooleanField(_('Ativo'), default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
     slug = models.SlugField('Hash',max_length= 200,null=True,blank=True)

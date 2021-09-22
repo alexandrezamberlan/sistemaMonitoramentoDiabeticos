@@ -1,0 +1,296 @@
+{% extends 'appaluno/base.html' %}
+{% load bootstrap3 %}
+
+{% block actions %}
+{% endblock %}
+
+{% block title %}
+{% bootstrap_icon 'list-alt' %} Minha Submissão de projeto de TFG
+{% endblock %}
+
+{% block content %}
+
+<form class="form" role="form" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  {% for error in form.non_field_errors %}
+    {% bootstrap_alert error 'danger' %}
+  {% endfor %}
+
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <tr>
+        <td>
+          {% if object.turma.disciplina.sigla == "TFG1" %}
+            <h3>Pré-projeto</h3>
+          {% else %}
+            <h3>Continuação trabalho: TFG2</h3>
+          {% endif %}
+        </td>
+        <td>
+          <h3>Prazo</h3>
+        </td>
+        <td>
+          <h3>Entrega</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {{ form.arquivo_documento_aceite.label }} 
+          <small>Clique <a href="{% url 'appaluno_documento_list' %}"> aqui </a> para acessar o termo de aceite </small><br>
+          <small><b>ATENÇÃO:</b> Baixe, leia, preencha e carregue o documento em formato PDF.</small>
+        </td>
+        <td>
+          {{ object.turma.data_entrega_declaracao_aceite|date:'d/m/Y' }} 
+        </td>
+        <td>
+          {% if object.turma.data_entrega_declaracao_aceite >= object.get_data_atual and object.abre_entrega_declaracao_aceite %}
+            {{ form.arquivo_documento_aceite }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {{ form.normativas.label }} 
+          <small>Clique <a href="{% url 'appaluno_documento_list' %}"> aqui </a> para acessar as normativas </small>
+        </td>
+        <td>
+          {{ object.turma.data_entrega_normativas|date:'d/m/Y' }}
+        </td>
+        <td>
+          {% if object.turma.data_entrega_normativas >= object.get_data_atual and object.abre_entrega_normativas %}
+            {{ form.normativas }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+            <span class="hidden">{{ form.normativas }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% if object.turma.disciplina.sigla == "TFG1" %}
+        <tr>
+          <td>
+            {{ form.arquivo_texto_preprojeto.label }}<br>
+            <small><b>ATENÇÃO:</b> Use nome curto para o arquivo de formato PDF.</small>
+          </td>
+          <td>
+            {{ object.turma.data_entrega_preprojeto|date:'d/m/Y' }}
+          </td>
+          <td>
+            {% if object.turma.data_entrega_preprojeto >= object.get_data_atual and object.abre_entrega_preprojeto %}
+              {{ form.arquivo_texto_preprojeto }}
+            {% else %}
+              {% bootstrap_icon 'ban-circle' %}
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td>Sem Pré-projeto. Você está em TFG2</td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endif%}
+      <tr>
+        <td>
+          <h3>Avaliação TFG</h3>
+        </td>
+        <td>
+          <h3>Prazo</h3>
+        </td>
+        <td>
+          <h3>Confirmação</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {{ form.arquivo_texto_tfgorientador.label }}<br>
+          <small><b>ATENÇÃO:</b> Use nome curto para o arquivo de formato PDF.</small>
+        </td>
+        <td>
+          {{ object.turma.data_entrega_tfg_para_orientador|date:'d/m/Y' }}
+        </td>
+        <td>
+          {% if object.turma.data_entrega_tfg_para_orientador >= object.get_data_atual and object.abre_entrega_tfg_para_orientador %}
+            {{ form.arquivo_texto_tfgorientador }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <p style="text-align:justify">Eu, {{object.aluno.nome}}, brasileiro(a), CPF {{object.aluno.cpf}},  
+             estudante do curso de {{object.aluno.curso.nome}} da Universidade Franciscana - UFN, 
+             Santa Maria/RS, declaro para os devidos fins que assumo integralmente a responsabilidade 
+             pelo conteúdo, ideias e citações constantes em meu Trabalho Final de Graduação – TFG, 
+             bem como o software desenvolvido no âmbito de meu trabalho, isentando a Universidade, 
+             o professor orientador e os professores componentes da banca de qualquer responsabilidade. 
+             Declaro, ainda, que estou ciente de que na hipótese de constatação de plágio 
+             poderei responder administrativa, civil e criminalmente, sob as penas da lei.
+          </p>
+        </td>
+        <td>
+          {{ object.turma.data_entrega_tfg_para_banca|date:'d/m/Y' }}
+        </td>
+        <td>
+          {% if object.turma.data_entrega_tfg_para_banca >= object.get_data_atual  and object.abre_entrega_tfg_para_banca%}
+            
+            {{ form.termo_autoria.label }}
+            <br><br>
+            {{ form.termo_autoria }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+            <span class="hidden">{{ form.termo_autoria }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          {{ form.arquivo_texto_tfgbanca.label }}<br>
+          <small><b>ATENÇÃO:</b> Use nome curto para o arquivo de formato PDF.</small>
+        </td>
+        <td>
+          {{ object.turma.data_entrega_tfg_para_banca|date:'d/m/Y' }}
+        </td>
+        <td>
+          {% if object.turma.data_entrega_tfg_para_banca >= object.get_data_atual and object.abre_entrega_tfg_para_banca %}
+            {{ form.arquivo_texto_tfgbanca }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+          {% endif %}
+        </td>
+      </tr>
+      {% if object.turma.disciplina.sigla == 'TFG2' %}
+        <tr>
+          <td>
+            {{ form.arquivo_produto_tfgfinal.label }}<br>
+            <small>Ajuda: {{ form.arquivo_produto_tfgfinal.help_text }} </small> <br>
+            <small><b>ATENÇÃO:</b> Coloque as orientações em arquivo TXT.</small>
+          </td>
+          <td>
+            {{ object.turma.data_entrega_tfg_para_banca|date:'d/m/Y' }}
+          </td>
+          <td>
+            {% if object.turma.data_entrega_tfg_para_banca >= object.get_data_atual and object.abre_entrega_tfg_para_banca %}
+              {{ form.arquivo_produto_tfgfinal }}
+            {% else %}
+              {% bootstrap_icon 'ban-circle' %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+      <tr>
+        <td>
+          <h3><span class="label label-warning">REBANCA</span></h3>
+        </td>
+        <td>
+          <h3>Prazo</h3>
+        </td>
+        <td>
+          <h3>Entrega</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h5>{{ form.arquivo_texto_tfgrebanca.label }} </h5>
+          <small><b>ATENÇÃO:</b> Use nome curto para o arquivo de formato PDF.</small>
+        </td>
+        <td>
+          A definir pela banca avaliadora e orientador.
+        </td>
+        <td>
+          {% if object.avaliacao.rebanca == "SIM" %}
+            {{ form.arquivo_texto_tfgrebanca }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Versão Final</h3>
+        </td>
+        <td>
+          <h3>Prazo</h3>
+        </td>
+        <td>
+          <h3>Entrega</h3>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          {% bootstrap_field form.titulo %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {{ form.arquivo_texto_tfgfinal.label }}<br>
+          <small><b>ATENÇÃO:</b> Use nome curto para o arquivo de formato PDF.</small>
+        </td>
+        <td>
+          48 horas após aprovação pela Banca.
+        </td>
+        <td>
+          {% if object.avaliacao.rebanca == 'SIM' and object.arquivo_texto_tfgrebanca or object.avaliacao.rebanca == 'NÃO' and object.arquivo_texto_tfgbanca %}
+            {{ form.arquivo_texto_tfgfinal }}
+          {% else %}
+            {% bootstrap_icon 'ban-circle' %}
+          {% endif %}
+        </td>
+      </tr>
+      
+      {% if object.turma.disciplina.sigla == 'TFG2' %}
+        <tr>
+          <td colspan="3">
+            {% bootstrap_field form.resumo %}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            {% bootstrap_field form.palavras_chave %}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h3>Para Biblioteca</h3>
+          </td>
+          <td>
+            <h3>Prazo</h3>
+          </td>
+          <td>
+            <h3>Entrega</h3>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.termo_biblioteca.label }}<br>
+            <small><b>Ajuda:</b> Clique <a href='https://tfgonline.lapinf.ufn.edu.br/documento/list/'
+              target='_blank'> aqui </a> para acessar o termo <br><br>
+              A <b>Liberação Parcial</b>, disponibiliza no sistema e na biblioteca, título, resumo e palavras-chave. 
+              Caso escolha <b>Aguardando Publicação</b>, logo após a publicação dos dados da pesquisa, o aluno deverá comunicar à coordenação de TFG para que esta faça a liberação integral do texto no Repositório de Trabalho Final de Graduação.
+            </small>
+          </td>
+          <td>
+            Após entregar a versão final.
+          </td>
+          <td>
+            {% if object.arquivo_texto_tfgbanca %}
+              {{ form.termo_biblioteca }}
+            {% else %}
+              {% bootstrap_icon 'ban-circle' %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+  </div>
+
+  {% buttons submit='Gravar' %}
+  <a href="javascript:history.go(-1);" class="btn btn-info" role="button">Voltar</a>
+  {% endbuttons %}
+</form>
+{% endblock %}

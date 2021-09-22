@@ -1,0 +1,41 @@
+{% extends 'appaluno/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+	{% bootstrap_icon 'eye-open' %} Ata de orientação <span class="label label-info">{{object.submissao.aluno.nome}} e {{object.submissao.orientador.nome}}</span>
+{% endblock %}
+
+{% block content %}
+	<hr>
+	<div class="panel-body">
+		<table class="table table-condensed table-responsive">
+			<thead>
+				<tr>
+				  <th>Data</th>
+				  <th>Hora</th>
+				  <th>Pauta</th>
+				  <th>Ata validada?</th>
+				  <th>Pontos de discussão, pendências e encaminhamentos</th>
+				</tr>
+			  </thead>
+			<tbody>
+				<tr>
+					<td>{{ object.data|date:'d/m/Y' }}</td>
+					<td>{{ object.hora }}</td>
+					<td>{{ object.pauta|linebreaks }}</td>
+					<td>
+						{% if object.validada %}
+							Sim
+						{% else %}
+							Não
+						{% endif%}
+					</td>
+					<td>{{ object.texto|linebreaks }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<a href="{% url 'appaluno_orientacao_list' %}" class="btn btn-md btn-primary">{% bootstrap_icon 'circle-arrow-up' %} Voltar </a>
+	</div>
+	
+{% endblock %}

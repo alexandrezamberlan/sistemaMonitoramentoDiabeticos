@@ -5,7 +5,6 @@
 
 {% block bootstrap3_extra_head %}
     <link href="{% static 'core/vendors/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css' %}" rel="stylesheet"/>
-    <link href="{% static 'core/css/dark.min.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block bootstrap3_extra_script %}
@@ -14,12 +13,12 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
-{#    <script src="{% static 'core/vendors/jquery.maskedinput/dist/jquery.maskedinput.min.js' %}"></script>#}
-{#    <script src="{% static 'core/js/mascaras-genericas.js' %}"></script>#}
+
+    <script src="{% static 'core/vendors/jquery.maskedinput/dist/jquery.maskedinput.min.js' %}"></script>
+    <script src="{% static 'core/js/mascaras-genericas.js' %}"></script>
 
     <script src="{% static 'core/vendors/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'core/vendors/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js' %}"></script>
     <script src="{% static 'core/js/datepicker.js' %}"></script>
-
-    <script src="{% static 'avaliacao/js/avaliacao.js' %}"></script>   
+    
 {% endblock %}

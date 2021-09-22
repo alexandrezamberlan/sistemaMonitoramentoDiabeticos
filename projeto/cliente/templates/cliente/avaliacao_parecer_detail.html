@@ -1,0 +1,131 @@
+{% extends 'appaluno/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+	
+<div class="panel panel-default">
+	<div class="panel-heading"> 
+		<b>AVALIAÇÃO:</b> {{ object.submissao }}
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<b>Orientador:</b> {{ object.submissao.orientador.nome }}
+	</div>
+	<div class="panel-body">
+		<h3><span class="label label-info">Parecer</span></h3>
+		{{ object.parecer_avaliador_orientador|linebreaks }}
+		<br>
+		{% if object.rebanca == 'SIM' %}
+			<h3><span class="label label-warning">Parecer de Rebanca</span></h3>
+			{{ object.parecer_rebanca_avaliador_orientador|linebreaks }}
+			<br>
+		{% endif %}
+		<b>Arquivo corrigido do TFG</b><br>
+		<span  data-toggle="tooltip"  title='Arquivo Corrigido'>
+			{% if object.arquivo_corrigido_orientador %}
+				<a href="{{ object.arquivo_corrigido_orientador.url }}" target="_blank" class="btn btn-md btn-success">
+					{% bootstrap_icon 'download' %}
+				</a>
+			{% else %}
+				<a href="" target="_blank" class="btn btn-md btn-warning disabled">
+					{% bootstrap_icon 'download' %}
+				</a>
+			{% endif %}
+		</span>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<b>Avaliador 1:</b> {{ object.avaliador_responsavel.nome }}
+	</div>
+	<div class="panel-body">
+		<h3><span class="label label-info">Parecer</span></h3>
+		{{ object.parecer_avaliador_responsavel|linebreaks }}
+		<br>
+		{% if object.rebanca == 'SIM' %}
+			<h3><span class="label label-warning">Parecer de Rebanca</span></h3>
+			{{ object.parecer_rebanca_avaliador_responsavel|linebreaks }}
+			<br>
+		{% endif %}
+		<b>Arquivo corrigido do TFG</b><br>
+		<span  data-toggle="tooltip"  title='Arquivo Corrigido'>
+			{% if object.arquivo_corrigido_responsavel %}
+				<a href="{{ object.arquivo_corrigido_responsavel.url }}" target="_blank" class="btn btn-md btn-success">
+					{% bootstrap_icon 'download' %}
+				</a>
+			{% else %}
+				<a href="" target="_blank" class="btn btn-md btn-warning disabled">
+					{% bootstrap_icon 'download' %}
+				</a>
+			{% endif %}
+		</span>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<b>Avaliador 2:</b> {{ object.avaliador_suplente.nome }}
+	</div>
+	<div class="panel-body">
+		<h3><span class="label label-info">Parecer</span></h3>
+		{{ object.parecer_avaliador_suplente|linebreaks }}
+		<br>
+		{% if object.rebanca == 'SIM' %}
+			<h3><span class="label label-warning">Parecer de Rebanca</span></h3>
+			{{ object.parecer_rebanca_avaliador_suplente|linebreaks }}
+			<br>
+		{% endif %}
+		<b>Arquivo corrigido do TFG</b><br>
+		<span  data-toggle="tooltip"  title='Arquivo Corrigido'>
+			{% if object.arquivo_corrigido_suplente %}
+				<a href="{{ object.arquivo_corrigido_suplente.url }}" target="_blank" class="btn btn-md btn-success">
+					{% bootstrap_icon 'download' %}
+				</a>
+			{% else %}
+				<a href="" target="_blank" class="btn btn-md btn-warning disabled">
+					{% bootstrap_icon 'download' %}
+				</a>
+			{% endif %}
+		</span>
+	</div>
+</div>
+
+{% if object.avaliador_convidado %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b>Avaliador convidado:</b> {{ object.avaliador_convidado.nome }}
+		</div>
+		<div class="panel-body">
+			<h3><span class="label label-info">Parecer</span></h3>
+			{{ object.parecer_avaliador_convidado|linebreaks }}
+			<br>
+			{% if object.rebanca == 'SIM' %}
+				<h3><span class="label label-warning">Parecer de Rebanca</span></h3>
+				{{ object.parecer_rebanca_avaliador_convidado|linebreaks }}
+				<br>
+			{% endif %}
+			<b>Arquivo corrigido do TFG</b><br>
+			<span  data-toggle="tooltip"  title='Arquivo Corrigido'>
+				{% if object.arquivo_anexo1 %}
+					<a href="{{ object.arquivo_corrigido_convidado.url }}" target="_blank" class="btn btn-md btn-success">
+						{% bootstrap_icon 'download' %}
+					</a>
+				{% else %}
+					<a href="" target="_blank" class="btn btn-md btn-warning disabled">
+						{% bootstrap_icon 'download' %}
+					</a>
+				{% endif %}
+			</span>
+		</div>
+	</div>
+{% endif %}
+
+	
+{% endblock %}
