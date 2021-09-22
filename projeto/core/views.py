@@ -4,14 +4,17 @@ from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic import RedirectView
 
-from utils.decorators import LoginRequiredMixin, StaffRequiredMixin, CoordenadorRequiredMixin, SecretariaCoordenadorAdministradorRequiredMixin
+from utils.decorators import LoginRequiredMixin, StaffRequiredMixin, ClienteRequiredMixin
 
 from usuario.models import Usuario
 
 
 class HomeRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, **kwargs):
-        return reverse('home')
+        if self.request.user.tipo == 'ADMINISTRADOR':
+            return reverse('home')
+        elif self.request.user.tipo == 'CLIENTE':
+            return reverse('cliente_home')
         # if self.request.user.tipo == 'ADMINISTRADOR':
         #     return reverse('home')
         # elif self.request.user.tipo == 'COORDENADOR':
@@ -38,7 +41,7 @@ class HomeRedirectView(LoginRequiredMixin, RedirectView):
     #    return HttpResponse("You're logged out.")
 
 
-class HomeView(LoginRequiredMixin, SecretariaCoordenadorAdministradorRequiredMixin, TemplateView):
+class HomeView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
     template_name = 'core/home.html'
 
 

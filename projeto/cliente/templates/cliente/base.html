@@ -1,4 +1,4 @@
-{% extends 'appaluno/bootstrap.html' %}
+{% extends 'cliente/bootstrap.html' %}
 {% load static %}
 
 {% load bootstrap3 %}
@@ -7,16 +7,16 @@
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge" /><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block bootstrap3_title %}TFG Online UFN</title>
+    <title>{% block bootstrap3_title %}SOMDiabetes - Sistema Online de Monitoramento da Diabetes</title>
         
-        <link rel = "icon" href =
+        <link rel = "icon" href =  
         "https://www.ufn.edu.br/site/favicon.ico" 
         type = "image/x-icon">
     {% endblock %}
 </head>
 
 {% block bootstrap3_content %}
-	{% include 'appaluno/includes/_menu_principal.html' %}
+	{% include 'cliente/includes/_menu_principal.html' %}
     <div class="container-fluid">
         <h1>{% block title %}(no title){% endblock %}</h1>
 
@@ -27,5 +27,5 @@
     <br>
     <br>
     <br>
-    {% include 'appaluno/includes/_barra_status.html' %}
+    {% include 'cliente/includes/_barra_status.html' %}
 {% endblock %}
