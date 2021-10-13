@@ -41,10 +41,13 @@ class UsuarioListView(LoginRequiredMixin, ListView):
 
         if form.is_valid():
             nome_usuario = form.cleaned_data.get('nome_usuario')
+            tipo = form.cleaned_data.get('tipo')
 
             if nome_usuario:
                 qs = qs.filter(nome__icontains=nome_usuario)
 
+            if tipo:
+                qs = qs.filter(tipo__icontains=tipo)
         return qs
     
     

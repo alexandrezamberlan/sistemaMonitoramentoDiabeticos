@@ -20,11 +20,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'cog' %} Gestão básica <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{% url 'usuario_list' %}" >Todos Usuários</a></li>
-            <li><a href="" >Clientes</a></li>
-            <li><a href="" >Educadores físicos</a></li>
-            <li><a href="" >Médicos</a></li>
-            <li><a href="" >Nutricionistas</a></li>
+            <li><a href="{% url 'usuario_list' %}" >Usuários</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="{% url 'alimento_list' %}" >Alimentos</a></li>
             <li><a href="{% url 'atividade_fisica_list' %}" >Atividades físicas</a></li>
@@ -35,8 +31,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'cutlery' %} Registrar refeição <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="">Agora</a></li>
-            <li><a href="">Outra hora</a></li>            
+            <li><a href="{% url 'registro_refeicao_list' %}">Cadastrar</a></li>            
           </ul>
         </li> 
 

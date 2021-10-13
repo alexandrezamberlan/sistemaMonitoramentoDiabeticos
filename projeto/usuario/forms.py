@@ -21,5 +21,14 @@ class UsuarioRegisterForm(forms.ModelForm):
 
 
 class BuscaUsuarioForm(forms.Form):
+    TIPOS_USUARIOS = (
+        (None, "---------"),
+        ('ADMINISTRADOR', 'Administrador'),
+        ('CLIENTE', 'Cliente'),
+        ('MÉDICO', 'Médico' ),
+        ('NUTRICIONISTA', 'Nutricionista'),
+        ('EDUCADOR FÍSICO', 'Educador Físico' ),
+        ('DEGUSTANDO', 'Degustando' ),
+    ) 
     nome_usuario = forms.CharField(label='Nome do usuário', required=False)
-    # curso = forms.ModelChoiceField(label='Curso', queryset=Curso.objects.all(), required=False)
+    tipo = forms.ChoiceField(label='Tipo de usuário', choices=TIPOS_USUARIOS, required=False)
