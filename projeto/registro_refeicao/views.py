@@ -20,24 +20,47 @@ class RegistroRefeicaoListView(LoginRequiredMixin, StaffRequiredMixin, ListView)
     template_name = 'registro_refeicao/registro_refeicao_list.html'
 
 class RegistroRefeicaoCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
-	model = RegistroRefeicao
-	template_name = 'registro_refeicao/registro_refeicao_form.html'
-	fields = ['data', 'hora', 'alimento', 'quantidade']
-	success_url = 'registro_refeicao_list'
-
-	def get_success_url(self):
-		messages.success(self.request, 'Registro da refeição cadastrado com sucesso!!')
-		return reverse(self.success_url)
+    model = RegistroRefeicao
+    template_name = 'registro_refeicao/registro_refeicao_form.html'
+    fields = ['data', 'hora', 'alimento', 'quantidade']
+    success_url = 'registro_refeicao_list'
+    
+    def form_valid(self, form):
+        refeicao = form.save(commit=False)
+        refeicao.total_calorias = refeicao.alimento.calorias * refeicao.quantidade
+        refeicao.total_carboidratos = refeicao.alimento.carboidratos * refeicao.quantidade
+        try:
+            refeicao.save()
+            return super().form_valid(form)
+        except Exception as e:
+            messages.error(self.request, 'Problemas para calcular quantidade de calorias e carboidratos dessa refeição')
+            return super().form_invalid(form)
+    
+    def get_success_url(self):
+        messages.success(self.request, 'Registro da refeição cadastrado com sucesso!!')
+        return reverse(self.success_url)
 
 class RegistroRefeicaoUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
-	model = RegistroRefeicao
-	template_name = 'registro_refeicao/registro_refeicao_form.html'
-	fields = ['data', 'hora', 'alimento', 'quantidade']
-	success_url = 'registro_refeicao_list'
- 
-	def get_success_url(self):
-		messages.success(self.request, 'Registro da refeição atualizado com sucesso!!')
-		return reverse(self.success_url)
+    model = RegistroRefeicao
+    template_name = 'registro_refeicao/registro_refeicao_form.html'
+    fields = ['data', 'hora', 'alimento', 'quantidade']
+    success_url = 'registro_refeicao_list'
+    
+    def form_valid(self, form):
+        refeicao = form.save(commit=False)
+        refeicao.total_calorias = refeicao.alimento.calorias * refeicao.quantidade
+        refeicao.total_carboidratos = refeicao.alimento.carboidratos * refeicao.quantidade
+        try:
+            refeicao.save()
+            return super().form_valid(form)
+        except Exception as e:
+            messages.error(self.request, 'Problemas para calcular quantidade de calorias e carboidratos dessa refeição ')
+            print(e)
+            return super().form_invalid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, 'Registro da refeição atualizado com sucesso!!')
+        return reverse(self.success_url)
 
 
 class RegistroRefeicaoDeleteView(LoginRequiredMixin, StaffRequiredMixin, DeleteView):

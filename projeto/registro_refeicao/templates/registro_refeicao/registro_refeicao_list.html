@@ -16,7 +16,9 @@
   			<th>Data</th>
 			<th>Hora</th>
 			<th>Alimento</th>
-			<th>Quantidade</th>
+			<th class="text-center">Quantidade</th>
+			<th class="text-center">Calorias</th>
+			<th class="text-center">Carboidratos</th>
   			<th class="text-center">Editar</th>
   			<th class="text-center">Excluir</th>
   		</thead>
@@ -27,7 +29,9 @@
 					<td>{{ rr.data|date:'d/m/Y' }}</td>
 					<td>{{ rr.hora }}</td>
 					<td>{{ rr.alimento }}</td>
-					<td>{{ rr.quantidade }}</td>
+					<td class="text-center">{{ rr.quantidade }}</td>
+					<td class="text-center">{{ rr.total_calorias }}</td>
+					<td class="text-center">{{ rr.total_carboidratos }}</td>
 					<td class="text-center">
 				          {% bootstrap_button content='' href=rr.get_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}
 				    </td>

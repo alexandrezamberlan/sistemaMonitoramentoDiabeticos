@@ -23,6 +23,8 @@ class RegistroRefeicao(models.Model):
     hora = models.TimeField(_('Hora de consumo do alimento *'), help_text='Use hh:mm')
     alimento = models.ForeignKey('alimento.Alimento', verbose_name="Alimento", on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
     quantidade = models.DecimalField(_('Quantidade do alimento *'), max_digits=3, decimal_places=1, help_text='Utilize 0.5 para meia porção') 
+    total_carboidratos = models.DecimalField(max_digits=6, decimal_places=1) 
+    total_calorias = models.DecimalField(max_digits=6, decimal_places=1) 
     slug = models.SlugField('Hash',max_length= 200,null=True,blank=True)
 
     
