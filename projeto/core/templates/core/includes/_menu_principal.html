@@ -30,13 +30,7 @@
         
         <li><a href="{% url 'registro_refeicao_list' %}">{% bootstrap_icon 'cutlery' %} Registrar refeição</a></li>
 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'fire' %} Registrar atividade física <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="">Agora</a></li>
-            <li><a href="">Outra hora</a></li>
-          </ul>
-        </li> 
+        <li><a href="{% url 'registro_atividade_list' %}">{% bootstrap_icon 'fire' %} Registrar atividade física</a></li>
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% bootstrap_icon 'briefcase' %} Registrar medicamento <span class="caret"></span></a>

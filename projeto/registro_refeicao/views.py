@@ -13,11 +13,43 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from utils.decorators import LoginRequiredMixin, StaffRequiredMixin
 
 from .models import RegistroRefeicao
+from .forms import BuscaRefeicaoForm
 
 
 class RegistroRefeicaoListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
     model = RegistroRefeicao
     template_name = 'registro_refeicao/registro_refeicao_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.GET:
+            #quando ja tem dado filtrando
+            context['form'] = BuscaRefeicaoForm(data=self.request.GET)
+        else:
+            #quando acessa sem dado filtrando
+            context['form'] = BuscaRefeicaoForm()
+        return context
+
+    def get_queryset(self):
+        qs = RegistroRefeicao.objects.all()
+
+        if self.request.GET:
+            #quando ja tem dado filtrando
+            form = BuscaRefeicaoForm(data=self.request.GET)
+        else:
+            #quando acessa sem dado filtrando
+            form = BuscaRefeicaoForm()
+
+        if form.is_valid():
+            alimento = form.cleaned_data.get('alimento')
+            data = form.cleaned_data.get('data')
+
+            if alimento:
+                qs = qs.filter(alimento__descricao__icontains=alimento)
+
+            if data:
+                qs = qs.filter(data__icontains=data)
+        return qs
 
 class RegistroRefeicaoCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = RegistroRefeicao
