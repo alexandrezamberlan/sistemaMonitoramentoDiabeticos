@@ -19,6 +19,7 @@ class RegistroRefeicao(models.Model):
         ('JANTAR', 'Jantar'),
         ('REFEIÇÃO EXTRA', 'Refeição extra' ),
     )
+    cliente = models.ForeignKey('usuario.Usuario', verbose_name='Usuario', null = True, blank= True, on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
     data = models.DateField(_('Data de consumo do alimento *'), help_text='Use dd/mm/aaaa')
     hora = models.TimeField(_('Hora de consumo do alimento *'), help_text='Use hh:mm')
     alimento = models.ForeignKey('alimento.Alimento', verbose_name="Alimento", on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
@@ -29,12 +30,12 @@ class RegistroRefeicao(models.Model):
 
     
     class Meta:
-        ordering            =   ['data', 'hora', 'alimento']
+        ordering            =   ['cliente','data', 'hora', 'alimento']
         verbose_name        =   _('registro_refeicao')
         verbose_name_plural =   _('registros_refeicoes')
 
     def __str__(self):
-         return '%s - %s - %s - %s' % (self.data, self.hora, self.alimento, self.quantidade)
+         return '%s - %s - %s - %s - %s' % (self.cliente, self.data, self.hora, self.alimento, self.quantidade)
 
     def save(self, *args, **kwargs):
         if not self.slug:

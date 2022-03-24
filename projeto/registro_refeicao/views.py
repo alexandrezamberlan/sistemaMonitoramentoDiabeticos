@@ -14,6 +14,7 @@ from utils.decorators import LoginRequiredMixin, StaffRequiredMixin
 
 from .models import RegistroRefeicao
 from .forms import BuscaRefeicaoForm
+from .forms import ClienteForm
 
 
 class RegistroRefeicaoListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
@@ -41,8 +42,12 @@ class RegistroRefeicaoListView(LoginRequiredMixin, StaffRequiredMixin, ListView)
             form = BuscaRefeicaoForm()
 
         if form.is_valid():
+            cliente = form.cleaned_data.get('cliente')
             alimento = form.cleaned_data.get('alimento')
             data = form.cleaned_data.get('data')
+
+            if cliente:
+                qs = qs.filter(cliente__nome__icontains=cliente)
 
             if alimento:
                 qs = qs.filter(alimento__descricao__icontains=alimento)
@@ -54,7 +59,7 @@ class RegistroRefeicaoListView(LoginRequiredMixin, StaffRequiredMixin, ListView)
 class RegistroRefeicaoCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = RegistroRefeicao
     template_name = 'registro_refeicao/registro_refeicao_form.html'
-    fields = ['data', 'hora', 'alimento', 'quantidade']
+    form_class = ClienteForm
     success_url = 'registro_refeicao_list'
     
     def form_valid(self, form):
@@ -75,7 +80,7 @@ class RegistroRefeicaoCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateV
 class RegistroRefeicaoUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = RegistroRefeicao
     template_name = 'registro_refeicao/registro_refeicao_form.html'
-    fields = ['data', 'hora', 'alimento', 'quantidade']
+    form_class = ClienteForm
     success_url = 'registro_refeicao_list'
     
     def form_valid(self, form):

@@ -11,9 +11,12 @@
 		<form class="form">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					{% bootstrap_field form.cliente  %}
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
 					{% bootstrap_field form.alimento  %}
 				</div>
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+				<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
 					{% bootstrap_field form.data  %}
 				</div>
 				<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
@@ -30,6 +33,7 @@
 	</div>
 	<table class="table table-hover">
   		<thead>
+			<th>Cliente</th>
   			<th>Data</th>
 			<th>Hora</th>
 			<th>Alimento</th>
@@ -43,6 +47,7 @@
   		<tbody>
   			{% for rr in object_list %}
 				<tr>
+					<td>{{ rr.cliente }}</td>
 					<td>{{ rr.data|date:'d/m/Y' }}</td>
 					<td>{{ rr.hora }}</td>
 					<td>{{ rr.alimento }}</td>
