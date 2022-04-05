@@ -14,6 +14,7 @@ from utils.decorators import LoginRequiredMixin, StaffRequiredMixin
 
 from .models import RegistroAtividade
 from .forms import BuscaAtividadeForm
+from .forms import ClienteForm
 
 
 class RegistroAtividadeListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
@@ -41,9 +42,13 @@ class RegistroAtividadeListView(LoginRequiredMixin, StaffRequiredMixin, ListView
             form = BuscaAtividadeForm()
 
         if form.is_valid():
+            cliente = form.cleaned_data.get('cliente')
             atividade = form.cleaned_data.get('atividade')
             data = form.cleaned_data.get('data')
 
+            if cliente:
+                qs = qs.filter(cliente__nome__icontains=cliente)
+            
             if atividade:
                 qs = qs.filter(atividade__nome__icontains=atividade)
 
@@ -54,7 +59,7 @@ class RegistroAtividadeListView(LoginRequiredMixin, StaffRequiredMixin, ListView
 class RegistroAtividadeCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = RegistroAtividade
     template_name = 'registro_atividade/registro_atividade_form.html'
-    fields = ['data', 'hora', 'atividade', 'duracao', 'esforco', 'frequencia_cardiaca_media']
+    form_class = ClienteForm
     success_url = 'registro_atividade_list'
     
     def form_valid(self, form):
@@ -75,7 +80,7 @@ class RegistroAtividadeCreateView(LoginRequiredMixin, StaffRequiredMixin, Create
 class RegistroAtividadeUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = RegistroAtividade
     template_name = 'registro_atividade/registro_atividade_form.html'
-    fields = ['data', 'hora', 'atividade', 'duracao', 'esforco', 'frequencia_cardiaca_media']
+    form_class = ClienteForm    
     success_url = 'registro_atividade_list'
     
     def form_valid(self, form):

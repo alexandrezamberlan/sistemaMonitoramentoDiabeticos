@@ -19,7 +19,7 @@ class AdministradorAtivoManager(UserManager):
 
 class ClienteAtivoManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(Q(tipo='CLIENTE') | Q(tipo='ADMINISTRADOR'))
+        return super().get_queryset().filter(tipo='CLIENTE')
 
 
 class Usuario(AbstractBaseUser):

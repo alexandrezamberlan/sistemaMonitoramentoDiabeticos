@@ -21,6 +21,7 @@ class RegistroAtividade(models.Model):
         ('17 - MUITO CANSATIVO', '17 - Muito cansativo'),
         ('19 - EXAUSTIVO', '19 - Exaustivo'),
     )
+    cliente = models.ForeignKey('usuario.Usuario', verbose_name='Usuario *', on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
     data = models.DateField(_('Data da atividade física *'), help_text='Use dd/mm/aaaa')
     hora = models.TimeField(_('Hora da atividade física *'), help_text='Use hh:mm')    
     atividade = models.ForeignKey('atividade_fisica.AtividadeFisica', verbose_name="Atividade física realizada", on_delete=models.PROTECT)

@@ -19,7 +19,7 @@ class RegistroRefeicao(models.Model):
         ('JANTAR', 'Jantar'),
         ('REFEIÇÃO EXTRA', 'Refeição extra' ),
     )
-    cliente = models.ForeignKey('usuario.Usuario', verbose_name='Usuario', null = True, blank= True, on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
+    cliente = models.ForeignKey('usuario.Usuario', verbose_name='Usuario *', on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
     data = models.DateField(_('Data de consumo do alimento *'), help_text='Use dd/mm/aaaa')
     hora = models.TimeField(_('Hora de consumo do alimento *'), help_text='Use hh:mm')
     alimento = models.ForeignKey('alimento.Alimento', verbose_name="Alimento", on_delete=models.PROTECT, help_text="* indica campo obrigatório.")
