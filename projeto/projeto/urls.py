@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'alimento/', include('alimento.urls')),
     url(r'atividade_fisica/', include('atividade_fisica.urls')),
     url(r'cliente/', include('cliente.urls')),
+    url(r'historico_peso/', include('historico_peso.urls')),
     url(r'registro_atividade/', include('registro_atividade.urls')),
     url(r'registro_refeicao/', include('registro_refeicao.urls')),
     url(r'usuario/', include('usuario.urls')),

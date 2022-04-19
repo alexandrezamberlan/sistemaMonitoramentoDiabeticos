@@ -53,7 +53,7 @@ class UsuarioListView(LoginRequiredMixin, ListView):
     
 class UsuarioCreateView(LoginRequiredMixin, CreateView):
     model = Usuario
-    fields = ['tipo', 'nome', 'email', 'password','cpf' , 'fone', 'is_active']
+    fields = ['tipo', 'nome', 'email', 'password','cpf' , 'fone', 'is_active', 'data_nascimento', 'sexo']
     success_url = 'usuario_list'
     
     def get_success_url(self):
@@ -63,7 +63,7 @@ class UsuarioCreateView(LoginRequiredMixin, CreateView):
 
 class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model = Usuario
-    fields = ['tipo', 'nome', 'email', 'cpf', 'fone', 'is_active']
+    fields = ['tipo', 'nome', 'email', 'cpf', 'fone', 'is_active', 'data_nascimento', 'sexo']
     template_name = 'usuario/usuario_form_update.html'
     success_url = 'usuario_list'
     

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'alimento',
     'atividade_fisica',
     'cliente',
+    'historico_peso',
     'registro_atividade',
     'registro_refeicao',
     'usuario'

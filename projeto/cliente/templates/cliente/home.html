@@ -3,19 +3,21 @@
 {% load static %}
 
 {% block title %}
-      <img src="{% static 'core/img/logoUFN_hor.jpg' %}"
-      class="img-responsive" style="max-width: 200px;">
+      {% comment %} <img src="{% static 'core/img/logoSOMDIABETES.jpeg' %}"
+      class="img-responsive" style="max-width: 200px;"> {% endcomment %}
 {% endblock %}
 
 {% block content %}
 
 {% if user.is_authenticated %}
       <center>
-            <img src="{% static 'core/img/logoSOMDIABETES.jpeg' %}"
-                   class="img-responsive" style="max-width: 340px;">
+            <br><br>
             
-            <!-- <img src="{% static 'core/img/logoTFGOnline.png' %}"
-                   class="img-responsive" style="max-width: 200px;"> -->
+            <h2>
+                  Sistema On-line de Monitoramento da Diabetes
+            <h2>
+            <br>
+            <br> 
             
 
             <h2>Estimado Cliente</h2>

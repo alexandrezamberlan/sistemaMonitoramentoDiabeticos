@@ -11,11 +11,15 @@
 {% if user.is_authenticated %}
       <center>
             <br><br>
-            <img src="{% static 'core/img/logoSOMDIABETES.jpeg' %}"
+            {% comment %} <img src="{% static 'core/img/logoSOMDIABETES.jpeg' %}"
                   class="img-responsive" style="max-width: 440px;">
+             {% endcomment %}
             
-
-            <br><br>
+            <h2>
+                  Sistema On-line de Monitoramento da Diabetes
+            <h2>
+            <br>
+            <br> 
             <h3>Aqui você poderá gerenciar: <br>pacientes/clientes, <br>alimentos, <br>medicações e<br> atividades físicas</h3>
 	</center>
 {% endif %}

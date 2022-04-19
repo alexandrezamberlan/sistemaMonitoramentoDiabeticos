@@ -47,7 +47,7 @@ class AboutView(LoginRequiredMixin, ClienteRequiredMixin, TemplateView):
 class DadosClienteUpdateView(LoginRequiredMixin, ClienteRequiredMixin, UpdateView):
     model = Usuario
     template_name = 'cliente/dados_cliente_form.html'
-    fields = ['nome','cpf', 'fone', 'data_nascimento', 'sexo', 'peso', 'altura', 'percentual_gordura']
+    fields = ['nome','cpf', 'fone', 'data_nascimento', 'sexo', 'altura']
     success_url = 'cliente_home'
 
     def get_object(self, queryset=None):
