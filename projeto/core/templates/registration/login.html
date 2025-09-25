@@ -21,7 +21,7 @@
     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 box-arredondado">
       <div class="text-center">
         <img src="{% static 'core/img/logoSomdiabetes.png' %}"
-              class="img-fluid" style="max-width: 200px;">
+              class="img-fluid" style="max-width: 130px;">
       </div>  
       <br>
         <div class="account-wall">
@@ -39,10 +39,14 @@
             <a class="btn btn-warning" style="width:49%;" href="{% url 'password_reset' %}">{% bootstrap_icon 'glyphicon glyphicon-flag' %} Resetar senha</a>
           </p>
           <br>
-          <p align='center'>
-            Registro INPI: ????<br>
-            <small>Dúvidas e/ou sugestões, contate: <b>lapinf@ufn.edu.br</b> </small>.
-          </p>
+          <div class="text-center">
+            <hr>
+            <a href="https://lapinf.ufn.edu.br" target="_blank"><img src="{% static 'core/img/logo_lapinf_hor.png' %}"
+              style="width: 120px;"></a>   
+              
+              <a href="http://erclinic.com.br/" target="_blank"><img src="{% static 'core/img/logoERClinic.png' %}"
+                style="width: 40px;"></a>                          
+          </div>
           <br>
           </form>
         </div>
@@ -53,26 +57,24 @@
       <h3>Sistema Online de Monitoramento da Diabetes</h3>
       
       <p align="justify">
-        Desenvolvido com a colaboração de estudantes dos cursos da área da Computação da UFN e do <a href='https://www.lapinf.ufn.edu.br' target='__blank'>Laboratório de Práticas UFN</a>, em parceria com a <a href='http://erclinic.com.br/' target='blank'>ER Clinic</a>. A plataforma SOMDiabetes foi desenvolvida com o propósito de apoiar pacientes e profissionais da Saúde na gestão do diabetes. Trata-se de um projeto extensionista dos cursos de Computação e Nutrição da Universidade Franciscana (UFN), que também se configura como um importante instrumento de conscientização sobre os cuidados necessários no manejo da doença. 
+        Desenvolvido com a colaboração de estudantes dos cursos da área da Computação da UFN e do <a href='https://www.lapinf.ufn.edu.br' target='__blank'>Laboratório de Práticas UFN</a>, em parceria com a <a href='http://erclinic.com.br/' target='blank'>ER Clinic</a>. A plataforma SOMDiabetes foi desenvolvida com o propósito de apoiar pacientes e profissionais da Saúde na gestão da diabetes. Trata-se de um projeto extensionista dos cursos de Computação e Nutrição da Universidade Franciscana (UFN), que também se configura como um importante instrumento de conscientização sobre os cuidados necessários no manejo da doença. 
 
         {% comment %} a plataforma foi criada para tornar a gestão de palestras, workshops e oficinas mais eficiente e acessível. Com ela, você pode acompanhar inscrições, controlar a frequência dos participantes e até gerar atestados de participação de forma rápida e sem complicação. O sistema está registrado junto ao INPI sob o número BR512025003008-8. {% endcomment %}
       </p>
       
-      <hr>
+      {% comment %} <hr>
       <h4>Avisos</h4>
-      <iframe style="border:0px; width:100%;" src="{% url 'aviso_list_iframe' %}"></iframe>
+      <iframe style="border:0px; width:100%;" src="{% url 'aviso_list_iframe' %}"></iframe> {% endcomment %}
+
+
+
+
+      
     </div> 
   </div>
-  <div class="text-center">
-    <hr>
-    <a href="https://lapinf.ufn.edu.br" target="_blank"><img src="{% static 'core/img/logo_lapinf_hor.png' %}"
-      style="width: 140px;"></a>   
-      
-      <a href="http://erclinic.com.br/" target="_blank"><img src="{% static 'core/img/logoERClinic.png' %}"
-        style="width: 50px;"></a>                          
-  </div>
+  
   <div align="center">
     <hr>
-    <p>Todos os direitos reservados | Registro INPI: BR512025003008-8 | Desde 2025.</p>
+    <p>Todos os direitos reservados | Registro INPI: ??? | Desde 2025.</p>
 </div>
 {% endblock %}
