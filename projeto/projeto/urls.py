@@ -1,20 +1,26 @@
-from django.conf.urls import url, include
+from django.conf.urls import include
+from django.urls import path
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'', include('core.urls')),
-    url(r'alimento/', include('alimento.urls')),
-    url(r'atividade_fisica/', include('atividade_fisica.urls')),
-    url(r'cliente/', include('cliente.urls')),
-    url(r'historico_peso/', include('historico_peso.urls')),
-    url(r'registro_atividade/', include('registro_atividade.urls')),
-    url(r'registro_refeicao/', include('registro_refeicao.urls')),
-    url(r'usuario/', include('usuario.urls')),
-    url(r'^accounts/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),
+    path('', include('core.urls')),
+    
+    path('participante/', include('appmembro.urls')), 
+    
+    path('atestado_manual/', include('atestado_manual.urls')), 
+    path('aviso/', include('aviso.urls')), 
+    path('evento/', include('evento.urls')), 
+    path('frequencia/', include('frequencia.urls')), 
+    path('instituicao/', include('instituicao.urls')), 
+    path('inscricao/', include('inscricao.urls')),
+    path('relatorio/', include('relatorio.urls')), 
+    path('tipo_evento/', include('tipo_evento.urls')), 
+    path('usuario/', include('usuario.urls')), 
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 #url para arquivos de media quando em desenvolvimento
@@ -23,5 +29,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, 
-    document_root = settings.STATIC_ROOT)    
-  
+    document_root = settings.STATIC_ROOT)   

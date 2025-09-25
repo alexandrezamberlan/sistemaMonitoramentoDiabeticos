@@ -1,0 +1,69 @@
+{% extends 'appmembro/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+    {% bootstrap_icon 'print' %} Atestados em atividades
+{% endblock %}
+
+{% block content %}
+    {% comment %} <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        {% bootstrap_field form.pesquisa %}
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <br>
+                        <button type="submit" class="btn btn-success btn-md"
+                                style="width: 100%;">{% bootstrap_icon 'search' %} Buscar
+                        </button>
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <th>Atividade</th>
+            <th>Responsável</th>
+            <th>Período</th>            
+            <th class="text-center">Atestado</th>            
+            </thead>
+            <tbody>
+            {% for atestado in object_list %}
+                <tr>
+                    <td>
+                        {{ atestado.atividade }} | Carga horária: {{ atestado.carga_horaria }} h<br>
+                        <small>Código de matrícula: {{ atestado.codigo_matricula }}</small
+                    </td>
+                    <td>
+                        {{ atestado.responsavel }}<br>
+                        <small>{{ atestado.instituicao }}</small>
+                    </td>
+                    <td>
+                        <b>Início:</b> {{ atestado.data_inicio|date:'d/m/Y' }}<br>
+                        {% if atestado.data_fim %}
+                            <b>Fim:</b> {{ atestado.data_fim|date:'d/m/Y' }}
+                        {% endif %}
+                    </td>
+                    
+                    <td class="text-center">
+                        <a href="{% url 'atestado_manual_pdf' slug=atestado.slug %}" class="btn btn-success btn-sm">
+                            {% bootstrap_icon 'print' %}
+                        </a>
+                    </td>                    
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <th colspan="4">
+                Total de registros: {{ object_list|length }}
+            </th>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}

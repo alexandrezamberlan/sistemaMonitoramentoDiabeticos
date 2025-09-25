@@ -1,34 +1,27 @@
 from django import forms
+from django.db import models
+
 from .models import Usuario
 
+class BuscaUsuarioForm(forms.Form):    
+    pesquisa = forms.CharField(label='Pesquisa livre', required=False)
+       
+    
 class UsuarioRegisterForm(forms.ModelForm):
     TIPOS_USUARIOS = (
-        ('CLIENTE', 'Cliente'),
+        ('PARTICIPANTE', 'Participante'),
     )
-
-    tipo = forms.ChoiceField(label='Tipo *',choices=TIPOS_USUARIOS, help_text='Este processo cadastra somente alunos' )
-    nome = forms.CharField(label='Nome completo', help_text='* Campos obrigatórios')
-    email = forms.EmailField(label= 'Email *', max_length=100, help_text='Use o email institucional')
     
-    cpf = forms.CharField(label='CPF *' , max_length = 14 , help_text='ATENÇÃO: Somente os NÚMEROS', required = True)
+    tipo = forms.ChoiceField(label='Tipo *',choices=TIPOS_USUARIOS, help_text='Este processo cadastra somente participante', required=True)
+    nome = forms.CharField(label='Nome completo *', help_text='* Campos obrigatórios',required=True)
     
-    fone = forms.CharField(label='Celular para contato *', max_length=14, help_text="ATENÇÃO: Somente os NÚMEROS", required = True)    
-    password = forms.CharField(label= "Senha *", widget=forms.PasswordInput)
+    instituicao = forms.CharField(label='Instituição a que pertence *', help_text='Registre a instituição, ou universidade, ou empresa',required=True)
+    email = forms.EmailField(label='Email *', help_text='Use o email válido. Será usado para acessar sistema e recuperar senha!',required=True)
+    celular = forms.CharField(label='Número celular com DDD *', help_text="Use DDD, por exemplo 55987619832",required=True)
+    cpf = forms.CharField(label='CPF *',required=True)    
+    password = forms.CharField(label= "Senha *", widget=forms.PasswordInput,required=True)
+    aceita_termo = forms.BooleanField(label='Aceito', required=True, help_text='Se marcado, você aceita o termo de consentimento de uso do sistema')
         
     class Meta:
         model = Usuario
-        fields = ['nome','tipo', 'email', 'cpf', 'fone','password']
-
-
-class BuscaUsuarioForm(forms.Form):
-    TIPOS_USUARIOS = (
-        (None, "---------"),
-        ('ADMINISTRADOR', 'Administrador'),
-        ('CLIENTE', 'Cliente'),
-        ('MÉDICO', 'Médico' ),
-        ('NUTRICIONISTA', 'Nutricionista'),
-        ('EDUCADOR FÍSICO', 'Educador Físico' ),
-        ('DEGUSTANDO', 'Degustando' ),
-    ) 
-    nome_usuario = forms.CharField(label='Nome do usuário', required=False)
-    tipo = forms.ChoiceField(label='Tipo de usuário', choices=TIPOS_USUARIOS, required=False)
+        fields = ['tipo','nome','instituicao', 'email', 'celular', 'cpf', 'password','aceita_termo']

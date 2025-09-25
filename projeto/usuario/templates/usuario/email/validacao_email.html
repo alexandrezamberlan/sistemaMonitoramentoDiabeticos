@@ -2,20 +2,17 @@
 {% load bootstrap3 %}
 
 {% block subject %}
-    {{ usuario.nome }}, bem-vindo(a) ao TFG ONLINE. Valide o seu cadastro!
+    {{ usuario.nome }} valide seu cadastro no SOMDiabetes!
 {% endblock %}
 
 {% block html %}
     <br>
-    <h2>Bem vindo(a) ao TFG ONLINE</h2>
-    <p>{{ usuario.nome }}!! <br><br>
-        
-        Antes de utilizar a plataforma <strong>TFG ONLINE</strong>, você precisa habilitar a sua conta.</p><br>
-        
-    <p>Clique <a href='{{ usuario.get_usuario_register_activate_url }}'>aqui</a> para prosseguir com a ativação da conta.</a> </p>
-    
+    <h2>Bem-vindo(a) ao SOMDiabetes. Processo de validação de cadastro!</h2>
+    <p>{{ usuario.nome }}, antes de utilizar a plataforma <strong>SOMDiabetes</strong> você precisa habilitar a sua conta.</p>
+    <p>Clique <a href='{{ usuario.get_usuario_register_activate_url }}'>aqui</a> para prosseguir.</a> </p>
+    <br>
     <p>***** MENSAGEM GERADA AUTOMATICAMENTE. NÃO RESPONDA. *****</p>
     <br>
     <hr>
-    <p><small>Desenvolvido pelo Laboratório de Práticas da Computação UFN.</small></p>
+    <p><small>Desenvolvido pelo Laboratório de Práticas da Computação UFN em Parceria com ER Clinic | Direitos Reservados.</small></p>
 {% endblock %}

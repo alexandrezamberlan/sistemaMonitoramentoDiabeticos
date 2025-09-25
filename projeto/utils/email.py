@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template import Context
@@ -24,7 +25,7 @@ def _send(from_email, to, subject='', text_content='', html_content='', reply_to
 
         return True
 
-    except Exception as e:
+    except Exception, e:
         raise Exception('erro: _send() %s' % e.message)
         return False
 
@@ -35,6 +36,7 @@ def enviar_email_padrao(from_email=None, to=None, subject=None, text=None):
         d = Context({ 'text': text })
         html_content = html.render(d)
         return _send(from_email, [to], subject, '', html_content, from_email)
-    except Exception as e:
-        print('erro: enviar_email_padrao() %s' % e.message)
+    except Exception, e:
+        print 'erro: enviar_email_padrao()'
+        print e.message
         return False

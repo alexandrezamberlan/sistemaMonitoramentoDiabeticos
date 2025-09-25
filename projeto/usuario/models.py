@@ -1,25 +1,42 @@
 from __future__ import unicode_literals
 
-from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, UserManager
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+#from django.utils.translation import ugettext_lazy as _
+
+from evento.models import Evento
 
 from datetime import timedelta, datetime
 
 from utils.gerador_hash import gerar_hash
+
 
 class AdministradorAtivoManager(UserManager):
     def get_queryset(self):
         return super().get_queryset().filter(tipo='ADMINISTRADOR', is_active=True)
 
 
-class ClienteAtivoManager(UserManager):
+class CoordenadorAtivoManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(tipo='CLIENTE', is_active=True)
+        return super().get_queryset().filter(Q(tipo='COORDENADOR') | Q(tipo='ADMINISTRADOR'), is_active=True)
+    
+
+class UsuarioAtivoManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+    
+
+class MinistranteAtivoManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(Q(tipo='MINISTRANTE') | Q(tipo='COORDENADOR') | Q(tipo='ADMINISTRADOR'), is_active=True)
+    
+
+class ParticipanteAtivoManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(tipo='PARTICIPANTE', is_active=True)
 
 
 class Usuario(AbstractBaseUser):
@@ -27,48 +44,39 @@ class Usuario(AbstractBaseUser):
     #2 campo da tupla eh mostrado para o usuario
     TIPOS_USUARIOS = (
         ('ADMINISTRADOR', 'Administrador'),
-        ('CLIENTE', 'Cliente'),
-        ('MÉDICO', 'Médico' ),
-        ('NUTRICIONISTA', 'Nutricionista'),
-        ('EDUCADOR FÍSICO', 'Educador Físico' ),
-        ('DEGUSTANDO', 'Degustando' ),
-    ) 
-    TIPO_SEXO = (
-        ('MASCULINO', 'Masculino'),
-        ('FEMININO', 'Feminino'),
+        ('COORDENADOR', 'Coordenador de Evento' ),
+        ('PARTICIPANTE', 'Participante' ),        
+        ('MINISTRANTE', 'Ministrante' ),    
     )
-
+   
     USERNAME_FIELD = 'email'
 
-    tipo = models.CharField(_('Tipo do usuário *'), max_length=19, choices=TIPOS_USUARIOS, default='CLIENTE', help_text='* Campos obrigatórios')
-    nome = models.CharField(_('Nome completo *'), max_length=100)
-    email = models.EmailField(_('Email'), unique=True, max_length=100, db_index=True)
-    cpf = models.CharField(_('CPF *'),max_length=14,help_text='ATENÇÃO: Somente os NÚMEROS')
-    fone = models.CharField(_('Celular par contato *'),max_length=14, help_text='ATENÇÃO: Somente os NÚMEROS')
-
-    data_nascimento = models.DateField(_("Data de nascimento *"), null=True, blank=True, auto_now=False, auto_now_add=False, help_text='dd/mm/aaaa')
-    sexo = models.CharField(_('Sexo *'), max_length=10, choices=TIPO_SEXO, null=True, blank=True, help_text='Campo obrigatório para cálculo de gasto energético/calórico e consumo alimentar')    
-    altura = models.DecimalField(_('Altura (metros) *'), max_digits=3, decimal_places=2, null=True, blank=True,) 
-    
-    
-    # peso = models.DecimalField(_('Peso (Kg) *'), max_digits=5, decimal_places=2, null=True, blank=True,)
-    # imc = models.DecimalField(_('Índice de Massa Corporal (calculado)'), max_digits=3, decimal_places=2,null=True, blank=True,) 
-    # percentual_gordura = models.DecimalField(_('Percentual de gordura (%)'), max_digits=3, decimal_places=0,null=True, blank=True, help_text='Número inteiro (sem casas decimais)') 
-    
-    is_active = models.BooleanField(_('Ativo'), default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
+    tipo = models.CharField('Tipo do usuário *', max_length=15, choices=TIPOS_USUARIOS, default='PARTICIPANTE', help_text='* Campos obrigatórios')
+    nome = models.CharField('Nome completo *', max_length=100)
+   
+    instituicao = models.CharField('Instituição a que pertence *', max_length=50, help_text='Registre a instituição, ou universidade, ou empresa')
+    email = models.EmailField('Email', unique=True, max_length=100, db_index=True)
+    celular = models.CharField('Número celular com DDD *', max_length=14, help_text="Use DDD, por exemplo 55987619832")
+    cpf = models.CharField('CPF *', max_length=14, help_text='ATENÇÃO: Somente os NÚMEROS')    
+    aceita_termo = models.BooleanField('Marque o aceite do termo de consentimento', default=False, help_text='Se marcado, usuário tem consentimento de uso do sistema')
+    eh_avaliador = models.BooleanField('É avaliador', default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
+    is_active = models.BooleanField('Ativo', default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
     slug = models.SlugField('Hash',max_length= 200,null=True,blank=True)
 
     objects = UserManager()
     administradores = AdministradorAtivoManager()
-    clientes = ClienteAtivoManager()
+    coordenadores = CoordenadorAtivoManager()
+    participantes = ParticipanteAtivoManager()
+    lista_ministrantes = MinistranteAtivoManager()
+    usuarios_ativos = UsuarioAtivoManager()
 
     class Meta:
-        ordering            =   ['tipo','nome']
-        verbose_name        =   _('usuário')
-        verbose_name_plural =   _('usuários')
+        ordering            =   ['-is_active', 'nome']
+        verbose_name        =   ('usuário')
+        verbose_name_plural =   ('usuários')
 
     def __str__(self):
-        return '%s | %s' % (self.nome, self.email)
+        return '%s - %s' % (self.nome, self.email)
 
     def has_module_perms(self, app_label):
         return True
@@ -86,12 +94,19 @@ class Usuario(AbstractBaseUser):
         if not self.slug:
             self.slug = gerar_hash()
         self.nome = self.nome.upper()
+        self.instituicao = self.instituicao.upper()
+        self.email = self.email.lower()
         if not self.id:
             self.set_password(self.password) #criptografa a senha digitada no forms
         super(Usuario, self).save(*args, **kwargs)
 
     def get_id(self):
         return self.id
+
+    @property
+    def get_primeiro_nome(self):
+        lista = self.nome.split(" ")
+        return lista[0]
 
     @property
     def is_staff(self):
@@ -101,20 +116,24 @@ class Usuario(AbstractBaseUser):
 
     @property
     def get_absolute_url(self):
-        return reverse('usuario_update', args=[str(self.id)])
+        return reverse('usuario_update', kwargs={'slug': self.slug})
 
     @property
     def get_delete_url(self):
-        return reverse('usuario_delete', args=[str(self.id)])
+        return reverse('usuario_delete', kwargs={'slug': self.slug})
 
     @property
     def get_usuario_register_activate_url(self):
         return '%s%s' % (settings.DOMINIO_URL, reverse('usuario_register_activate', kwargs={'slug': self.slug}))
-    
-    @property
-    def get_submissoes(self):
-        return apps.get_model('submissao', 'Submissao').objects.filter(aluno=self)
 
     @property
-    def get_submissao_create_url(self):
-        return '%s?usuario_id=%d' % (reverse('submissao_create'), self.id)
+    def total_eventos_ativos(self):
+        return Evento.objects.filter(is_active=True).count()
+    
+    @property
+    def total_eventos_coordenados(self):                
+        return Evento.objects.filter(coordenador = self).count()
+    
+    @property
+    def total_eventos_coordenados_ativos(self):                
+        return Evento.objects.filter(coordenador = self, is_active=True).count()

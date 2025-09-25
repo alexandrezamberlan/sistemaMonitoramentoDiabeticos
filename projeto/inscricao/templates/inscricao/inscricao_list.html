@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+	{% bootstrap_icon 'pencil' %} Inscrições
+{% endblock %}
+
+{% block content %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+		<form class="form">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+					{% bootstrap_field form.pesquisa  %}
+				</div>	
+				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+					<br>
+					<button type="submit" class="btn btn-success btn-md"  style="width: 100%;">{% bootstrap_icon 'search' %} Buscar</button>
+				</div>			
+				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+					<br>
+					<a href="{% url 'inscricao_create' %}" class="btn btn-md btn-primary" style="width: 100%;">{% bootstrap_icon 'record' %} Cadastrar inscrição</a>
+				</div>			
+			</div>
+		</form>
+		</div>
+	</div>
+
+	
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<th>Evento</th>
+				<th>Participante</th>	
+				<th class="text-center">Gerar frequência</th>								
+				<th class="text-center">Atestado gerado</th>
+				<th>Data e hora inscrição</th>							
+				{% comment %} <th class="text-center">Ativo</th> {% endcomment %}
+				{% comment %} <th class="text-center">Editar</th> {% endcomment %}
+				<th class="text-center">Excluir</th>
+			</thead>
+
+			<tbody>
+				{% for inscricao in object_list %}
+					<tr>
+						<td>
+							{{ inscricao.evento.nome }}<br>
+							<small>Data: {{ inscricao.evento.data_inicio }} | Local: {{ inscricao.evento.instituicao.nome }} </small>
+                            <br>
+                            <small class="{% if inscricao.evento.pode_registrar_frequencia %}text-success{% else %}text-danger{% endif %}">Limite registro frequência: {{ inscricao.evento.data_hora_limite_registro_frequencia|date:'d/m/Y H:i' }}</small>
+						</td>
+						<td>
+							{{ inscricao.participante }}<br>
+							Código matrícula: <small><b> {{ inscricao.codigo_matricula }} </b></small>
+						</td>
+						<td class="text-center">
+							{% if not inscricao.frequencia %}								
+								<span data-toggle="tooltip" title="Gerar frequência">
+									{% bootstrap_button content='' href=inscricao.get_frequencia_via_inscricao_create_url button_type='link' icon='record' button_class='btn btn-primary' size='sm' %}
+								</span>
+							{% else %}
+								<a href="" class="btn btn-sm btn-warning" title="Frequência gerada">
+									{% bootstrap_icon 'record' %}
+								</a>
+							{% endif %}
+						</td>
+						<td class="text-center">
+							{% if inscricao.frequencia %}								
+								<span data-toggle="tooltip" title="Imprimir PDF">
+									{% bootstrap_button content='' href=inscricao.get_gera_atestado_url button_type='link' icon='print' button_class='btn btn-success' size='sm' %}
+								</span>
+								<br>
+								<small>Frequência em:<br> {{ inscricao.frequencia|date:'d/m/Y | H:i' }}</small><br>
+							{% else %}
+								<a href="" class="btn btn-sm btn-warning" title="Frequência não realizada">
+									{% bootstrap_icon 'print' %}
+								</a>
+							{% endif %}
+						</td>
+						<td>
+							{{ inscricao.data_hora_inscricao|date:'d/m/Y' }} | 
+							{{ inscricao.data_hora_inscricao|date:'H:i' }}
+						</td>																		
+						{% comment %} <td class="text-center">
+							{% if inscricao.is_active %}
+								<span class="label label-success">SIM</span>
+							{% else %}
+								<span class="label label-danger">NÃO</span>
+							{% endif %}
+						</td> {% endcomment %}
+						{% comment %} <td class="text-center">
+							{% bootstrap_button content='' href=inscricao.get_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}
+						</td> {% endcomment %}
+						<td class="text-center">
+							{% bootstrap_button content='' href=inscricao.get_delete_url button_type='link' icon='trash' button_class='btn btn-danger' size='sm' %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<th colspan="7">
+					Total de registros: {{ object_list|length }}
+				</th>
+			</tfoot>
+		</table>
+	</div>
+{% endblock %}
