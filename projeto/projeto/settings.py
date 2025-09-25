@@ -51,14 +51,9 @@ INSTALLED_APPS = [
     
     'appmembro',
 
-    'atestado_manual',
     'aviso',
-    'evento',
-    'frequencia',
-    'instituicao',
-    'inscricao',
     'relatorio',
-    'tipo_evento',
+
     'usuario',
     
 ]

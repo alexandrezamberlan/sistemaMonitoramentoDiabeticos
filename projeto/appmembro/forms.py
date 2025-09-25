@@ -1,8 +1,5 @@
 from django import forms
 
-from evento.models import Evento
-from frequencia.models import Frequencia
-from inscricao.models import Inscricao
 from usuario.models import Usuario
 
 
@@ -18,21 +15,3 @@ class MembroCreateForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ['nome','instituicao', 'email', 'celular', 'cpf']
-
-
-class InscricaoForm(forms.ModelForm):
-    evento = forms.ModelChoiceField(label='Evento', queryset=Evento.eventos_ativos_data_aberta.all())
-    
-    class Meta:
-        model = Inscricao
-        fields = ['evento']
-        
-        
-class FrequenciaForm(forms.ModelForm):
-    
-    class Meta:
-        model = Frequencia
-        fields = ['inscricao', 'codigo_frequencia']
-        
-class AutenticaForm(forms.Form):        
-    pesquisa = forms.CharField(label='Código de verificação/matrícula', required=False)

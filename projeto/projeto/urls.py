@@ -11,14 +11,8 @@ urlpatterns = [
     
     path('participante/', include('appmembro.urls')), 
     
-    path('atestado_manual/', include('atestado_manual.urls')), 
     path('aviso/', include('aviso.urls')), 
-    path('evento/', include('evento.urls')), 
-    path('frequencia/', include('frequencia.urls')), 
-    path('instituicao/', include('instituicao.urls')), 
-    path('inscricao/', include('inscricao.urls')),
     path('relatorio/', include('relatorio.urls')), 
-    path('tipo_evento/', include('tipo_evento.urls')), 
     path('usuario/', include('usuario.urls')), 
     path('accounts/', include('django.contrib.auth.urls')),
 ]
