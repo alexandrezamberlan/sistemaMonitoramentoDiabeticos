@@ -24,58 +24,49 @@ Este projeto faz parte do Laboratório de Práticas da Computação UFN e a disc
 
 - apps
     - usuario
-        - (OK)tipos: administrador, coordenador de evento, participante
-        - (OK)nome
-        - (OK)email (chave primária)
-        - (OK)celular
-        - (OK)cpf
-        - (OK)instituição (não tem vinculo com app instituição) - pedir pra não usar sigla
-        - FOTO PERFIL ????
-        - (OK)is_active
-        - (OK)slug
+        - tipos: administrador, cliente, nutricionista educador físico, médico 
+        - nome
+        - email (chave primária)
+        - celular
+        - cpf
+        
+        - data_nascimento
+        - peso ??
+        - altura ??
+        - relação carb_insulina
+        - relação glicemina_insulina
+
+        - is_active
+        - slug
 
         Obs.:
-            - (OK)usuário faz autocadastro (exceto administrador)
-                - (OK)colocar campo de aceite dos termos de uso
+            - usuário faz autocadastro (exceto administrador)
+                - colocar campo de aceite dos termos de uso
                 - verificar se está mandando por email a ativação do usuário
     
-    - (OK)instituição
-        - (OK)nome
-        - (OK)sigla (opcional)
-        - (OK)cidade
-        - (OK)estado
-        - (OK)país
-        - (OK)is_active
-        - (OK)slug
+    - alimento
+        - descrição do alimento
+        - unidade do alimento
+        - quantidade calorias por unidade do alimento
+        - quantidade de carboidratos por unidade do alimento
+        - fonte de referência
+        - is_active
+        - slug
 
-    - evento 
-        - (OK)nome ou título
-        - (OK)tipo (relação com app tipo de evento - palestra, minicurso, sarau, ...)
-        - (OK)carga horária
-        - (OK)instituição (relação com app instituição)
-        - (OK)local (descrição completa - textfield)
-        - (OK)lotação
-        - (OK)total de inscritos e vagas restantes ??? property
-        - (OK)data do evento
-        - (OK)coordenador do evento (relação com app usuario) - DEVE SER TIPO COORDENADOR EM USUÁRIO
-        - (OK)is_active
-        - (OK)slug
+    - atividade_fisica 
+        - nome
+        - detalhes da atividade (texto)
+        - tipo da atividade
+        - is_active
+        - slug
         
-    - inscricao
-        - (OK)usuário do tipo participante - SE O PARTICIPANTE SE LOGA, É AUTOMATICO A ESCOLHA DO PARTICIPANTE
-        - (OK)evento (relação com app evento)
-        - (OK)data e hora da inscrição (capturado automático)
-        - (OK)codigo_matricula (enviado por email)
-        - (OK)is_active
-        - (OK)slug
+    - medicamento
+        - nome fantasia
+        - nome referência
+        - is_active
+        - slug
 
-    - frequencia
-        - (OK)evento
-        - (OK)inscricao via codigo_matricula (DIGITADO OU LIDO POR QRCODE) OU reconhecimento facial (relação com app inscrição)        
-
-    - atestado
-        - (OK)evento (nome, tipo, carga horária (total ou real), instituição, local, data, coordenador do evento (nome e de assinatura))
-        - (OK)número do atestado
+    
 
 ## Sugestões de CSS
     - https://bootswatch.com/3/
