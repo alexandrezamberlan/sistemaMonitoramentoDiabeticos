@@ -11,6 +11,7 @@ urlpatterns = [
     
     path('participante/', include('appmembro.urls')), 
     
+    path('alimento/', include('alimento.urls')), 
     path('aviso/', include('aviso.urls')), 
     path('relatorio/', include('relatorio.urls')), 
     path('usuario/', include('usuario.urls')), 

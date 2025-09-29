@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     
     'appmembro',
 
+    'alimento',
     'aviso',
     'relatorio',
 

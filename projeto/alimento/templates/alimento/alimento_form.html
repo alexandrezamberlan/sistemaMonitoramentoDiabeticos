@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% load bootstrap3 %}
+
+{% block actions %}
+{% endblock %}
+
+{% block title %}
+	{% bootstrap_icon 'cutlery' %} Gestão alimento
+{% endblock %}
+
+{% block content %}
+
+
+
+<form id="formRelatorio" class="form" role="form" method="POST">
+  {% csrf_token %}
+  {% comment %} {{ form.non_field_errors }} {% endcomment %}
+  
+  {% for error in form.non_field_errors %}
+    {% bootstrap_alert error 'danger' %}
+  {% endfor %}
+    
+  {% bootstrap_form form %}
+    
+  {% buttons submit='Gravar' %}
+      <a href="javascript:history.go(-1);" class="btn btn-warning" role="button">Voltar</a>
+  {% endbuttons %}  
+</form>
+{% endblock %}
