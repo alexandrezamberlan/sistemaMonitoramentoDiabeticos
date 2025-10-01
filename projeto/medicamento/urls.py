@@ -1,11 +1,11 @@
 #from django.conf.urls import url
 from django.urls import path
-from .views import ExercicioListView, ExercicioCreateView
-from .views import ExercicioUpdateView, ExercicioDeleteView
+from .views import MedicamentoListView, MedicamentoCreateView
+from .views import MedicamentoUpdateView, MedicamentoDeleteView
 
 urlpatterns = [
-    path('list/', ExercicioListView.as_view(), name='exercicio_list'),
-    path('cad/', ExercicioCreateView.as_view(), name='exercicio_create'),
-    path('<slug:slug>/', ExercicioUpdateView.as_view(), name='exercicio_update'),
-    path('<slug:slug>/delete/', ExercicioDeleteView.as_view(), name='exercicio_delete'),
+    path('list/', MedicamentoListView.as_view(), name='medicamento_list'),
+    path('cad/', MedicamentoCreateView.as_view(), name='medicamento_create'),
+    path('<slug:slug>/', MedicamentoUpdateView.as_view(), name='medicamento_update'),
+    path('<slug:slug>/delete/', MedicamentoDeleteView.as_view(), name='medicamento_delete'),
 ]

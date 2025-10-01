@@ -29,6 +29,7 @@ class Medicamento(models.Model):
     
     class Meta:
         ordering = ['nome_comercial']
+        unique_together = ('nome_comercial', 'principio_ativo', 'classe_terapeutica')
         verbose_name = 'medicamento'
         verbose_name_plural = 'medicamentos'
 

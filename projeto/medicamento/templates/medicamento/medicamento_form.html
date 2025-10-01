@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title %}
-	{% bootstrap_icon 'fire' %} Gestão atividades físicas
+	{% bootstrap_icon 'briefcase' %} Gestão medicamentos
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,6 @@
 
 <form id="formRelatorio" class="form" role="form" method="POST">
   {% csrf_token %}
-  {% comment %} {{ form.non_field_errors }} {% endcomment %}
   
   {% for error in form.non_field_errors %}
     {% bootstrap_alert error 'danger' %}

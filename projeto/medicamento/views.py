@@ -9,22 +9,22 @@ from django.db.models import Q
 
 from utils.decorators import LoginRequiredMixin
 
-from .models import Exercicio
+from .models import Medicamento
 
-from .forms import BuscaExercicioForm
+from .forms import BuscaMedicamentoForm
 
 
-class ExercicioListView(LoginRequiredMixin, ListView):
-    model = Exercicio
+class MedicamentoListView(LoginRequiredMixin, ListView):
+    model = Medicamento
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.GET:
             #quando ja tem dados filtrando
-            context['form'] = BuscaExercicioForm(data=self.request.GET)
+            context['form'] = BuscaMedicamentoForm(data=self.request.GET)
         else:
             #quando acessa sem dados filtrando
-            context['form'] = BuscaExercicioForm()
+            context['form'] = BuscaMedicamentoForm()
         return context
 
     def get_queryset(self):                
@@ -32,46 +32,46 @@ class ExercicioListView(LoginRequiredMixin, ListView):
 
         if self.request.GET:
             #quando ja tem dados filtrando
-            form = BuscaExercicioForm(data=self.request.GET)
+            form = BuscaMedicamentoForm(data=self.request.GET)
         else:
             #quando acessa sem dados filtrando
-            form = BuscaExercicioForm()
+            form = BuscaMedicamentoForm()
 
         if form.is_valid():            
             pesquisa = form.cleaned_data.get('pesquisa')            
                         
             if pesquisa:
-                qs = qs.filter(Q(descricao__icontains=pesquisa) | Q(nome__icontains=pesquisa))
+                qs = qs.filter(Q(nome_comercial__icontains=pesquisa) | Q(principio_ativo__icontains=pesquisa) | Q(classe_terapeutica__icontains=pesquisa))
             
         return qs
 
 
-class ExercicioCreateView(LoginRequiredMixin, CreateView):
-    model = Exercicio
-    fields = ['nome', 'descricao', 'tipo']
-    success_url = 'exercicio_list'
+class MedicamentoCreateView(LoginRequiredMixin, CreateView):
+    model = Medicamento
+    fields = ['nome_comercial', 'principio_ativo', 'classe_terapeutica']
+    success_url = 'medicamento_list'
 
     def get_success_url(self):
-        messages.success(self.request, 'Exercicio cadastrado com sucesso na plataforma!')
+        messages.success(self.request, 'Medicamento cadastrado com sucesso na plataforma!')
         return reverse(self.success_url)
 
 
-class ExercicioUpdateView(LoginRequiredMixin, UpdateView):
-    model = Exercicio
-    fields = ['nome', 'descricao', 'tipo']
-    success_url = 'exercicio_list'
+class MedicamentoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Medicamento
+    fields = ['nome_comercial', 'principio_ativo', 'classe_terapeutica']
+    success_url = 'medicamento_list'
 
     def get_success_url(self):
-        messages.success(self.request, 'Exercicio atualizado com sucesso na plataforma!')
+        messages.success(self.request, 'Medicamento atualizado com sucesso na plataforma!')
         return reverse(self.success_url)
 
 
-class ExercicioDeleteView(LoginRequiredMixin, DeleteView):
-    model = Exercicio
-    success_url = 'exercicio_list'
+class MedicamentoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Medicamento
+    success_url = 'medicamento_list'
 
     def get_success_url(self):
-        messages.success(self.request, 'Exercicio removido com sucesso na plataforma!')
+        messages.success(self.request, 'Medicamento removido com sucesso na plataforma!')
         return reverse(self.success_url)
 
     def delete(self, request, *args, **kwargs):
@@ -80,11 +80,11 @@ class ExercicioDeleteView(LoginRequiredMixin, DeleteView):
         success URL. If the object is protected, send an error message.
         """
         self.object = self.get_object()
-        success_url = self.get_success_url()
+        
         try:
             self.object.delete()
         except Exception as e:
-            messages.error(request, 'Há dependências ligadas à esse Exercício, permissão negada!')
-        return redirect(self.success_url)
+            messages.error(request, 'Há dependências ligadas à esse Medicamento, permissão negada!')
+        return redirect(self.get_success_url())
     
         
