@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'aviso',
     'exercicio',
     'medicamento',
+    'registro_atividade',
     'relatorio',
 
     'usuario',

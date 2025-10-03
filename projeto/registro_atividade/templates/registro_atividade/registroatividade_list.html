@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+	{% bootstrap_icon 'fire' %} Registro exercícios
+{% endblock %}
+
+{% block content %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+		<form class="form">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+					{% bootstrap_field form.pesquisa  %}
+				</div>	
+				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+					<br>
+					<button type="submit" class="btn btn-success btn-md"  style="width: 100%;">{% bootstrap_icon 'search' %} Buscar</button>
+				</div>			
+				<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+					<br>
+					<a href="{% url 'registroatividade_create' %}" class="btn btn-md btn-primary" style="width: 100%;">{% bootstrap_icon 'record' %} Registrar exercício</a>
+				</div>			
+			</div>
+		</form>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-hover">
+			{% comment %} fields = ['cliente', 'data', 'hora', 'atividade', 'duracao', 'esforco', 'frequencia_cardiaca_media'] {% endcomment %}
+			<thead>
+				<th>Data|Hora</th>
+				<th>Cliente</th>
+				<th>Atividade</th>
+				<th>Esforço</th>
+				<th class="text-center">Editar</th>
+				<th class="text-center">Excluir</th>
+			</thead>
+			<tbody>
+				{% for exercicio in object_list %}
+					<tr>
+						<td>
+							{{ exercicio.data|date:"d/m/Y" }} | {{ exercicio.hora|time:"H:i" }}
+						</td>
+						<td>
+							{{ exercicio.cliente.nome }}
+						</td>
+						<td>
+							{{ exercicio.atividade }}
+						</td>
+						<td>
+							{{ exercicio.esforco }}<br>							
+							{% if exercicio.frequencia_cardiaca_media %}
+								<small class="text-muted">Freq. Cardíaca Média: {{ exercicio.frequencia_cardiaca_media }} bpm</small><br>
+							{% endif %}
+							<small class="text-muted">Duração: {{ exercicio.duracao }} min</small><br>
+						</td>
+						<td class="text-center">
+							{% bootstrap_button content='' href=exercicio.get_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}
+						</td>
+						<td class="text-center">
+							{% bootstrap_button content='' href=exercicio.get_delete_url button_type='link' icon='trash' button_class='btn btn-danger' size='sm' %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<th colspan="6">
+					Total de registros: {{ object_list|length }}
+				</th>
+			</tfoot>
+		</table>
+	</div>
+{% endblock %}
