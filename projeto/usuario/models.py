@@ -53,6 +53,7 @@ class Usuario(AbstractBaseUser):
 
     tipo = models.CharField('Tipo do usuário *', max_length=15, choices=TIPOS_USUARIOS, default='PARTICIPANTE', help_text='* Campos obrigatórios')
     nome = models.CharField('Nome completo *', max_length=100)
+    # data_nascimento = models.DateField('Data de nascimento', null=True, blank=True)
    
     instituicao = models.CharField('Instituição a que pertence *', max_length=50, help_text='Registre a instituição, ou universidade, ou empresa')
     email = models.EmailField('Email', unique=True, max_length=100, db_index=True)

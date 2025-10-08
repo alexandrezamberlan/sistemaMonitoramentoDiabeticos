@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
     'alimento',
     'aviso',
+    'dado_clinico',
     'exercicio',
     'medicamento',
     'registro_atividade',

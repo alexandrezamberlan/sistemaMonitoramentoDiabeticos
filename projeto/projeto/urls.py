@@ -13,6 +13,7 @@ urlpatterns = [
     
     path('alimento/', include('alimento.urls')), 
     path('aviso/', include('aviso.urls')), 
+    path('dado_clinico/', include('dado_clinico.urls')),
     path('exercicio/', include('exercicio.urls')), 
     path('medicamento/', include('medicamento.urls')), 
     path('registro_atividade/', include('registro_atividade.urls')), 
