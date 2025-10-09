@@ -38,7 +38,6 @@ class UsuarioListView(LoginRequiredMixin, CoordenadorRequiredMixin, ListView):
         else:
             qs = super().get_queryset().all()
         
-        
         if self.request.GET:
             #quando ja tem dados filtrando
             form = BuscaUsuarioForm(data=self.request.GET)
@@ -50,14 +49,14 @@ class UsuarioListView(LoginRequiredMixin, CoordenadorRequiredMixin, ListView):
             pesquisa = form.cleaned_data.get('pesquisa')
                        
             if pesquisa:
-                qs = qs.filter(Q(nome__icontains=pesquisa) | Q(email__icontains=pesquisa) | Q(celular__icontains=pesquisa) | Q(cpf__icontains=pesquisa) | Q(instituicao__icontains=pesquisa))            
+                qs = qs.filter(Q(nome__icontains=pesquisa) | Q(email__icontains=pesquisa) | Q(celular__icontains=pesquisa) | Q(cpf__icontains=pesquisa) | Q(data_nascimento__icontains=pesquisa) | Q(sexo__icontains=pesquisa))
             
         return qs
 
 
 class UsuarioCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     model = Usuario
-    fields = ['tipo', 'nome', 'instituicao', 'celular', 'cpf', 'email', 'password', 'aceita_termo', 'is_active']
+    fields = ['tipo', 'nome', 'data_nascimento', 'sexo', 'celular', 'cpf', 'email', 'password', 'aceita_termo', 'is_active']
     success_url = 'usuario_list'
     
     def get_success_url(self):
@@ -67,7 +66,7 @@ class UsuarioCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
 
 class UsuarioUpdateView(LoginRequiredMixin, StaffRequiredMixin, UpdateView):
     model = Usuario
-    fields = ['tipo', 'nome', 'instituicao', 'celular', 'cpf', 'email', 'is_active']
+    fields = ['tipo', 'nome', 'data_nascimento', 'sexo', 'celular', 'cpf', 'email', 'is_active']
     success_url = 'usuario_list'
     
     def get_success_url(self):

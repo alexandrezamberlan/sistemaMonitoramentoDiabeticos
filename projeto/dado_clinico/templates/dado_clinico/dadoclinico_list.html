@@ -31,6 +31,7 @@
 			{% comment %} fields = ['cliente', 'medicamentos', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active'] {% endcomment %}
 			<thead>
 				<th>Cliente | Paciente</th>
+				<th>Dados clínicos</th>
 				<th>Medicamentos</th>
 				<th>Bolus</th>
 				<th class="text-center">Ativo</th>
@@ -42,13 +43,17 @@
 					<tr>
 						<td>
 							{{ dado.cliente.nome }} <br>
+							<small class="text-muted">Sexo: {{ dado.cliente.sexo }}</small><br>					
+							<small class="text-muted">Registro: {{ dado.data_registro|date:"d/m/Y" }}</small>					
+						</td>
+						<td>
+							<small class="text-muted">Data Nasc: {{ dado.cliente.data_nascimento|date:"d/m/Y" }}</small> <br>
 							<small class="text-muted">Peso: {{ dado.peso }} kg</small> <br>
-							<small class="text-muted">Altura: {{ dado.altura }} cm</small> <br>
-							<small class="text-muted">Data de Registro: {{ dado.data_registro }}</small>
+							<small class="text-muted">Altura: {{ dado.altura }} cm</small> <br>							
 						</td>
 						<td>
 							{% for medicamento in dado.medicamentos.all %}
-								<span class='text-muted'>{{ medicamento }}</span>
+								<span class='text-muted'>{{ medicamento.nome_comercial }}</span>
 								{% if forloop.last %}
 									<span class='text-muted'>.</span>
 								{% else %}

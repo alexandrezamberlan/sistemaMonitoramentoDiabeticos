@@ -11,7 +11,7 @@ from utils.decorators import LoginRequiredMixin
 
 from .models import DadoClinico
 
-from .forms import BuscaDadoClinicoForm
+from .forms import BuscaDadoClinicoForm, DadoClinicoForm
 
 
 class DadoClinicoListView(LoginRequiredMixin, ListView):
@@ -48,7 +48,8 @@ class DadoClinicoListView(LoginRequiredMixin, ListView):
 
 class DadoClinicoCreateView(LoginRequiredMixin, CreateView):
     model = DadoClinico
-    fields = ['cliente', 'medicamentos', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active']
+    # fields = ['cliente', 'medicamentos', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active']
+    form_class = DadoClinicoForm
     success_url = 'dadoclinico_list'
 
     def get_success_url(self):
@@ -58,7 +59,8 @@ class DadoClinicoCreateView(LoginRequiredMixin, CreateView):
 
 class DadoClinicoUpdateView(LoginRequiredMixin, UpdateView):
     model = DadoClinico
-    fields = ['cliente', 'medicamentos', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active']
+    # fields = ['cliente', 'medicamentos', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active']
+    form_class = DadoClinicoForm
     success_url = 'dadoclinico_list'
 
     def get_success_url(self):

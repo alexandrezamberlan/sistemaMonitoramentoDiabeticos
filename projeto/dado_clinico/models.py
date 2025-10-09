@@ -26,7 +26,7 @@ class DadoClinico(models.Model):
     dados_ativos = DadosAtivoManager()
     
     class Meta:
-        ordering = ['cliente']
+        ordering = ['cliente', '-data_registro']
         verbose_name = 'dado clínico'
         verbose_name_plural = 'dados clínicos'
 

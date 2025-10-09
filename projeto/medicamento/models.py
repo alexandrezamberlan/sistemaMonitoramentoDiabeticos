@@ -5,6 +5,12 @@ from django.urls import reverse
 
 from utils.gerador_hash import gerar_hash
 
+
+class MedicamentoAtivoManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+    
+    
 class Medicamento(models.Model):
     #1 campo da tupla fica no banco de dados
     #2 campo da tupla eh mostrado para o usuario
@@ -23,9 +29,11 @@ class Medicamento(models.Model):
     nome_comercial = models.CharField('Nome comercial *', max_length=25, help_text='ex: Novorapid, Lantus, Metformina')
     principio_ativo = models.CharField('Princípio ativo *', max_length=18, choices=TIPOS_PRINCIPIOS_ATIVOS)
     classe_terapeutica = models.CharField('Classe terapêutica *', max_length=25, choices=TIPOS_CLASSES_TERAPEUTICAS)
+    is_active = models.BooleanField('Selecione para usar medicamento no sistema', default=True, help_text='Se ativo, o medicamento fica disponível para seleção no sistema')
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
+    medicamentos_ativos = MedicamentoAtivoManager()
     
     class Meta:
         ordering = ['nome_comercial']

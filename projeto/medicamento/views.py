@@ -48,7 +48,7 @@ class MedicamentoListView(LoginRequiredMixin, ListView):
 
 class MedicamentoCreateView(LoginRequiredMixin, CreateView):
     model = Medicamento
-    fields = ['nome_comercial', 'principio_ativo', 'classe_terapeutica']
+    fields = ['nome_comercial', 'principio_ativo', 'classe_terapeutica', 'is_active']
     success_url = 'medicamento_list'
 
     def get_success_url(self):
@@ -58,7 +58,7 @@ class MedicamentoCreateView(LoginRequiredMixin, CreateView):
 
 class MedicamentoUpdateView(LoginRequiredMixin, UpdateView):
     model = Medicamento
-    fields = ['nome_comercial', 'principio_ativo', 'classe_terapeutica']
+    fields = ['nome_comercial', 'principio_ativo', 'classe_terapeutica', 'is_active']
     success_url = 'medicamento_list'
 
     def get_success_url(self):

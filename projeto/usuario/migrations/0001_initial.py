@@ -38,9 +38,7 @@ class Migration(migrations.Migration):
             managers=[
                 ('objects', django.contrib.auth.models.UserManager()),
                 ('administradores', usuario.models.AdministradorAtivoManager()),
-                ('coordenadores', usuario.models.CoordenadorAtivoManager()),
-                ('participantes', usuario.models.ParticipanteAtivoManager()),
-                ('ministrantes', usuario.models.MinistranteAtivoManager()),
+                
                 ('usuarios_ativos', usuario.models.UsuarioAtivoManager()),
             ],
         ),

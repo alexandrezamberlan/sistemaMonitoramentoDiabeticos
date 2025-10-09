@@ -32,6 +32,7 @@
 				<th>Nome comercial</th>
 				<th>Princípio ativo</th>
 				<th>Classe terapêutica</th>
+				<th class="text-center">Ativo</th>
 				<th class="text-center">Editar</th>
 				<th class="text-center">Excluir</th>
 			</thead>
@@ -41,6 +42,12 @@
 						<td>{{ medicamento.nome_comercial }}</td>
 						<td>{{ medicamento.principio_ativo }}</td>
 						<td>{{ medicamento.classe_terapeutica }}</td>
+						<td class="text-center">
+							{% if medicamento.is_active %}
+								<span class="label label-success">SIM</span>
+							{% else %}
+								<span class="label label-danger">NÃO</span>
+							{% endif %}
 						<td class="text-center">
 							{% bootstrap_button content='' href=medicamento.get_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}
 						</td>

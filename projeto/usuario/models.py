@@ -19,24 +19,29 @@ class AdministradorAtivoManager(UserManager):
         return super().get_queryset().filter(tipo='ADMINISTRADOR', is_active=True)
 
 
-class CoordenadorAtivoManager(UserManager):
+class MedicoAtivoManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(Q(tipo='COORDENADOR') | Q(tipo='ADMINISTRADOR'), is_active=True)
-    
+        return super().get_queryset().filter(Q(tipo='MEDICO'), is_active=True)
+
 
 class UsuarioAtivoManager(UserManager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
     
 
-class MinistranteAtivoManager(UserManager):
+class ClienteAtivoManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(Q(tipo='MINISTRANTE') | Q(tipo='COORDENADOR') | Q(tipo='ADMINISTRADOR'), is_active=True)
+        return super().get_queryset().filter(Q(tipo='CLIENTE'), is_active=True)
     
 
-class ParticipanteAtivoManager(UserManager):
+class NutricionistaAtivoManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(tipo='PARTICIPANTE', is_active=True)
+        return super().get_queryset().filter(tipo='NUTRICIONISTA', is_active=True)
+    
+    
+class EducadorFisicoAtivoManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(tipo='EDUCADOR FISICO', is_active=True)
 
 
 class Usuario(AbstractBaseUser):
@@ -44,31 +49,39 @@ class Usuario(AbstractBaseUser):
     #2 campo da tupla eh mostrado para o usuario
     TIPOS_USUARIOS = (
         ('ADMINISTRADOR', 'Administrador'),
-        ('COORDENADOR', 'Coordenador de Evento' ),
-        ('PARTICIPANTE', 'Participante' ),        
-        ('MINISTRANTE', 'Ministrante' ),    
+        ('CLIENTE', 'Cliente'),
+        ('MEDICO', 'Médico' ),
+        ('NUTRICIONISTA', 'Nutricionista'),
+        ('EDUCADOR FISICO', 'Educador Físico' ),
+        ('OUTRO PROFISSIONAL DE SAUDE', 'Outro Profissional de Saúde' ),
+    ) 
+    TIPO_SEXO = (
+        ('FEMININO', 'Feminino'),
+        ('MASCULINO', 'Masculino'),
     )
    
     USERNAME_FIELD = 'email'
 
-    tipo = models.CharField('Tipo do usuário *', max_length=15, choices=TIPOS_USUARIOS, default='PARTICIPANTE', help_text='* Campos obrigatórios')
+    tipo = models.CharField('Tipo do usuário *', max_length=30, choices=TIPOS_USUARIOS, default='CLIENTE', help_text='* Campos obrigatórios')
     nome = models.CharField('Nome completo *', max_length=100)
-    # data_nascimento = models.DateField('Data de nascimento', null=True, blank=True)
+    data_nascimento = models.DateField('Data de nascimento', null=True, blank=True, help_text='Informe sua data de nascimento (dd/mm/aaaa)')    
+    sexo = models.CharField('Sexo *', max_length=10, choices=TIPO_SEXO, null=True, blank=True, help_text='Campo obrigatório para cálculo de gasto energético/calórico e consumo alimentar')    
    
-    instituicao = models.CharField('Instituição a que pertence *', max_length=50, help_text='Registre a instituição, ou universidade, ou empresa')
+    # instituicao = models.CharField('Instituição a que pertence *', max_length=50, help_text='Registre a instituição, ou universidade, ou empresa')
     email = models.EmailField('Email', unique=True, max_length=100, db_index=True)
     celular = models.CharField('Número celular com DDD *', max_length=14, help_text="Use DDD, por exemplo 55987619832")
     cpf = models.CharField('CPF *', max_length=14, help_text='ATENÇÃO: Somente os NÚMEROS')    
     aceita_termo = models.BooleanField('Marque o aceite do termo de consentimento', default=False, help_text='Se marcado, usuário tem consentimento de uso do sistema')
-    eh_avaliador = models.BooleanField('É avaliador', default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
+    # eh_avaliador = models.BooleanField('É avaliador', default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
     is_active = models.BooleanField('Ativo', default=False, help_text='Se ativo, o usuário tem permissão para acessar o sistema')
     slug = models.SlugField('Hash',max_length= 200,null=True,blank=True)
 
     objects = UserManager()
     administradores = AdministradorAtivoManager()
-    coordenadores = CoordenadorAtivoManager()
-    participantes = ParticipanteAtivoManager()
-    lista_ministrantes = MinistranteAtivoManager()
+    clientes = ClienteAtivoManager()
+    nutricionistas = NutricionistaAtivoManager()
+    medicos = MedicoAtivoManager()
+    educadores_fisicos = EducadorFisicoAtivoManager()
     usuarios_ativos = UsuarioAtivoManager()
 
     class Meta:
@@ -94,8 +107,7 @@ class Usuario(AbstractBaseUser):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = gerar_hash()
-        self.nome = self.nome.upper()
-        self.instituicao = self.instituicao.upper()
+        self.nome = self.nome.upper()        
         self.email = self.email.lower()
         if not self.id:
             self.set_password(self.password) #criptografa a senha digitada no forms
@@ -126,15 +138,3 @@ class Usuario(AbstractBaseUser):
     @property
     def get_usuario_register_activate_url(self):
         return '%s%s' % (settings.DOMINIO_URL, reverse('usuario_register_activate', kwargs={'slug': self.slug}))
-
-    @property
-    def total_eventos_ativos(self):
-        return Evento.objects.filter(is_active=True).count()
-    
-    @property
-    def total_eventos_coordenados(self):                
-        return Evento.objects.filter(coordenador = self).count()
-    
-    @property
-    def total_eventos_coordenados_ativos(self):                
-        return Evento.objects.filter(coordenador = self, is_active=True).count()

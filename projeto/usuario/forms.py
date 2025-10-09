@@ -9,13 +9,18 @@ class BuscaUsuarioForm(forms.Form):
     
 class UsuarioRegisterForm(forms.ModelForm):
     TIPOS_USUARIOS = (
-        ('PARTICIPANTE', 'Participante'),
+        ('CLIENTE', 'Cliente'),
     )
     
-    tipo = forms.ChoiceField(label='Tipo *',choices=TIPOS_USUARIOS, help_text='Este processo cadastra somente participante', required=True)
+    TIPO_SEXO = (
+        ('FEMININO', 'Feminino'),
+        ('MASCULINO', 'Masculino'),
+    )
+
+    tipo = forms.ChoiceField(label='Tipo *',choices=TIPOS_USUARIOS, help_text='Este processo cadastra somente cliente', required=True)
     nome = forms.CharField(label='Nome completo *', help_text='* Campos obrigatórios',required=True)
-    
-    instituicao = forms.CharField(label='Instituição a que pertence *', help_text='Registre a instituição, ou universidade, ou empresa',required=True)
+    data_nascimento = forms.DateField(label='Data de nascimento', help_text='Informe sua data de nascimento (dd/mm/aaaa)', required=True, widget=forms.DateInput(format=('%d/%m/%Y'), attrs={'placeholder':'dd/mm/aaaa'}))
+    sexo = forms.ChoiceField(label='Sexo *', choices=TIPO_SEXO, help_text='Campo obrigatório para cálculo de gasto energético/calórico e consumo alimentar', required=True)
     email = forms.EmailField(label='Email *', help_text='Use o email válido. Será usado para acessar sistema e recuperar senha!',required=True)
     celular = forms.CharField(label='Número celular com DDD *', help_text="Use DDD, por exemplo 55987619832",required=True)
     cpf = forms.CharField(label='CPF *',required=True)    
@@ -24,4 +29,4 @@ class UsuarioRegisterForm(forms.ModelForm):
         
     class Meta:
         model = Usuario
-        fields = ['tipo','nome','instituicao', 'email', 'celular', 'cpf', 'password','aceita_termo']
+        fields = ['tipo','nome','data_nascimento','sexo', 'email', 'celular', 'cpf', 'password','aceita_termo']
