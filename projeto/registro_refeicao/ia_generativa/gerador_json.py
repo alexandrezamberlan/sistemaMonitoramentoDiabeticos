@@ -1,0 +1,2 @@
+class GeradorJSON:
+    pass

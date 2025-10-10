@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block title %}
-	{% bootstrap_icon 'cutlery' %} Gestão alimento
+	{% bootstrap_icon 'cutlery' %} Gestão registro refeição
 {% endblock %}
 
 {% block content %}
 
+
 <form id="formRelatorio" class="form" role="form" method="POST">
   {% csrf_token %}
-  {% comment %} {{ form.non_field_errors }} {% endcomment %}
   
   {% for error in form.non_field_errors %}
     {% bootstrap_alert error 'danger' %}
