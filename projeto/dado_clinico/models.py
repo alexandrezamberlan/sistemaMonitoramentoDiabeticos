@@ -12,10 +12,26 @@ class DadosAtivoManager(models.Manager):
     
 class ClientesDistintosManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True,cliente__tipo='CLIENTE').distinct('cliente').order_by('cliente__nome')
+        return super().get_queryset().filter(is_active=True,cliente__tipo='CLIENTE')
 
-class DadoClinico(models.Model):    
+
+class DiabeticosTipo1Manager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True,tipo_diabetes='DIABETES TIPO 1')
+
+
+class DadoClinico(models.Model): 
+    #1 campo da tupla fica no banco de dados
+    #2 campo da tupla eh mostrado para o usuario
+    TIPOS_DIABETES = (
+        ('SEM DIABETES', 'Sem Diabetes'),
+        ('PRE-DIABETES', 'Pré-Diabetes'),
+        ('DIABETES GESTACIONAL', 'Diabetes Gestacional'),
+        ('DIABETES TIPO 2', 'Diabetes Tipo 2'),
+        ('DIABETES TIPO 1', 'Diabetes Tipo 1'),
+    )    
     cliente = models.ForeignKey('usuario.Usuario', on_delete=models.PROTECT, related_name='dados_clinicos', verbose_name='Cliente *', help_text='* Campos obrigatórios')
+    tipo_diabetes = models.CharField('Tipo de Diabetes', max_length=20, choices=TIPOS_DIABETES, null=True, blank=True)
     medicamentos = models.ManyToManyField('medicamento.Medicamento', null=True,blank=True, related_name='medicamentos', verbose_name='Medicamentos')
     bolus_alimentar = models.PositiveIntegerField('Bolus Alimentar (U)', null=True, blank=True, help_text='Unidades de insulina para cada 10g de carboidrato, por exemplo')
     bolus_correcao = models.PositiveIntegerField('Bolus Correção (U)', null=True, blank=True, help_text='Unidades de insulina para cada 10mg/dL acima da meta, por exemplo')
@@ -31,13 +47,24 @@ class DadoClinico(models.Model):
     dados_ativos = DadosAtivoManager()
     clientes_distintos = ClientesDistintosManager()
     
+    diabeticos_tipo1 = DiabeticosTipo1Manager()
+    
     class Meta:
         ordering = ['cliente', '-data_registro']
         verbose_name = 'dado clínico'
         verbose_name_plural = 'dados clínicos'
 
     def __str__(self):
-        return f'{self.cliente} | {self.bolus_alimentar} | {self.bolus_correcao} | {self.glicemia_meta} | {self.altura} | {self.peso}'
+        return (
+            f"{self.cliente} ({self.cliente.idade}) | "
+            f"{self.tipo_diabetes or 'NI'} | "
+            f"{self.bolus_alimentar or ''} | "
+            f"{self.bolus_correcao or ''} | "
+            f"{self.glicemia_meta or ''} | "
+            f"{self.altura or ''} | "
+            f"{self.peso or ''}"
+        )
+
 
     def save(self, *args, **kwargs):
         if not self.slug:

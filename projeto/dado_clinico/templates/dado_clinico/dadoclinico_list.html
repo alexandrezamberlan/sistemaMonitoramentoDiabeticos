@@ -47,7 +47,7 @@
 							<small class="text-muted">Registro: {{ dado.data_registro|date:"d/m/Y" }}</small>					
 						</td>
 						<td>
-							<small class="text-muted">Data Nasc: {{ dado.cliente.data_nascimento|date:"d/m/Y" }}</small> <br>
+							<small class="text-muted">Data Nasc: {{ dado.cliente.data_nascimento|date:"d/m/Y" }} ({{ dado.cliente.idade }} anos)</small> <br>
 							<small class="text-muted">Peso: {{ dado.peso }} kg</small> <br>
 							<small class="text-muted">Altura: {{ dado.altura }} cm</small> <br>							
 						</td>
@@ -64,9 +64,15 @@
 							{% endfor %}
 						</td>
 						<td>
-							 {{ dado.bolus_alimentar }} U (Alimentar) <br>
-							 {{ dado.bolus_correcao }} U (Correção) <br>
-							 {{ dado.glicemia_meta }} mg/dL (Meta)
+							{% if dado.bolus_alimentar %}
+								{{ dado.bolus_alimentar }} U (Alimentar) <br>
+							{% endif %}
+							{% if dado.bolus_correcao %}
+								{{ dado.bolus_correcao }} U (Correção) <br>
+							{% endif %}
+							{% if dado.glicemia_meta %}
+								{{ dado.glicemia_meta }} mg/dL (Meta)
+							{% endif %}
 						</td>
 						<td class="text-center">
 							{% if dado.is_active %}

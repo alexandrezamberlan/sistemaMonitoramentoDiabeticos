@@ -9,7 +9,7 @@ from django.urls import reverse
 
 
 
-from datetime import timedelta, datetime
+from datetime import date, timedelta, datetime
 
 from utils.gerador_hash import gerar_hash
 
@@ -103,6 +103,12 @@ class Usuario(AbstractBaseUser):
 
     def get_full_name(self):
         return self.nome
+    
+    @property
+    def idade(self):
+        if self.data_nascimento:
+            return (date.today() - self.data_nascimento).days // 365
+        return None
 
     def save(self, *args, **kwargs):
         if not self.slug:
