@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.urls import reverse
-
+from .conecta_llm import Conecta
 from utils.gerador_hash import gerar_hash
 
 class RegistroRefeicao(models.Model):
@@ -14,6 +14,7 @@ class RegistroRefeicao(models.Model):
     total_carboidratos = models.PositiveIntegerField('Total de carboidratos (g)', null=True, blank=True, help_text='Total de carboidratos consumidos na refeição, se conhecido')
     total_calorias = models.PositiveIntegerField('Total de calorias (kcal)', null=True, blank=True, help_text='Total de calorias consumidas na refeição, se conhecido')
     data_hora_registro = models.DateTimeField('Data e hora do registro', auto_now=True)
+    
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
@@ -29,6 +30,20 @@ class RegistroRefeicao(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = gerar_hash()
+            
+        medicamentos = [med.nome_comercial for med in self.cliente.medicamentos.all()] if self.cliente.medicamentos.exists() else []
+        bolus_alimentar = self.cliente.bolus_alimentar or 1 #1 unidade de insulina para cada 10g de carboidrato
+        bolus_correcao = self.cliente.bolus_correcao or 1 #1 unidade de insulina para cada 10mg/dL acima da meta
+        glicemia_atual = self.glicemia_vigente
+        tipo_diabetes = self.cliente.tipo_diabetes or "SEM DIABETES"
+        descricao_alimentacao = self.registro_alimentacao
+        
+        contexto_json = Conecta.montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_atual, descricao_alimentacao)
+        
+        resposta_json = Conecta.gera_recomendacoes(contexto_json)
+
+        print(Conecta.desmontar_json(resposta_json))
+            
         super(RegistroRefeicao, self).save(*args, **kwargs)
 
     @property
