@@ -17,4 +17,4 @@ class DadoClinicoForm(forms.ModelForm):
 
     class Meta:
         model = DadoClinico
-        fields = ['cliente', 'medicamentos', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active']
+        fields = ['cliente', 'medicamentos', 'glicemia_meta', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso', 'is_active']

@@ -9,12 +9,17 @@ from utils.gerador_hash import gerar_hash
 class DadosAtivoManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
+    
+class ClientesDistintosManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True,cliente__tipo='CLIENTE').distinct('cliente').order_by('cliente__nome')
 
 class DadoClinico(models.Model):    
     cliente = models.ForeignKey('usuario.Usuario', on_delete=models.PROTECT, related_name='dados_clinicos', verbose_name='Cliente *', help_text='* Campos obrigatórios')
     medicamentos = models.ManyToManyField('medicamento.Medicamento', null=True,blank=True, related_name='medicamentos', verbose_name='Medicamentos')
     bolus_alimentar = models.PositiveIntegerField('Bolus Alimentar (U)', null=True, blank=True, help_text='Unidades de insulina para cada 10g de carboidrato, por exemplo')
     bolus_correcao = models.PositiveIntegerField('Bolus Correção (U)', null=True, blank=True, help_text='Unidades de insulina para cada 10mg/dL acima da meta, por exemplo')
+    glicemia_meta = models.PositiveIntegerField('Glicemia Meta (mg/dL)', null=True, blank=True)
     altura = models.PositiveIntegerField('Altura (cm)', null=True, blank=True)
     peso = models.PositiveIntegerField('Peso (kg)', null=True, blank=True)
     data_registro = models.DateField('Data do registro', auto_now=True)
@@ -24,6 +29,7 @@ class DadoClinico(models.Model):
 
     objects = models.Manager()
     dados_ativos = DadosAtivoManager()
+    clientes_distintos = ClientesDistintosManager()
     
     class Meta:
         ordering = ['cliente', '-data_registro']
@@ -31,7 +37,7 @@ class DadoClinico(models.Model):
         verbose_name_plural = 'dados clínicos'
 
     def __str__(self):
-        return f'{self.cliente} | {self.bolus_alimentar} | {self.bolus_correcao} | {self.altura} | {self.peso}'
+        return f'{self.cliente} | {self.bolus_alimentar} | {self.bolus_correcao} | {self.glicemia_meta} | {self.altura} | {self.peso}'
 
     def save(self, *args, **kwargs):
         if not self.slug:

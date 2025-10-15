@@ -11,7 +11,7 @@ from utils.decorators import LoginRequiredMixin
 
 from .models import RegistroRefeicao
 
-from .forms import BuscaRegistroRefeicaoForm
+from .forms import BuscaRegistroRefeicaoForm, RegistroRefeicaoForm
 
 
 class RegistroRefeicaoListView(LoginRequiredMixin, ListView):
@@ -48,7 +48,8 @@ class RegistroRefeicaoListView(LoginRequiredMixin, ListView):
 
 class RegistroRefeicaoCreateView(LoginRequiredMixin, CreateView):
     model = RegistroRefeicao
-    fields = ['cliente', 'registro_alimentacao', 'glicemia_vigente']
+    # fields = ['cliente', 'registro_alimentacao', 'glicemia_vigente']
+    form_class = RegistroRefeicaoForm
     success_url = 'registrorefeicao_list'
 
     def get_success_url(self):
@@ -58,7 +59,8 @@ class RegistroRefeicaoCreateView(LoginRequiredMixin, CreateView):
 
 class RegistroRefeicaoUpdateView(LoginRequiredMixin, UpdateView):
     model = RegistroRefeicao
-    fields = ['cliente', 'registro_alimentacao', 'glicemia_vigente']
+    # fields = ['cliente', 'registro_alimentacao', 'glicemia_vigente']
+    form_class = RegistroRefeicaoForm
     success_url = 'registrorefeicao_list'
 
     def get_success_url(self):
