@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.db.models import Max
+from django.db.models import Subquery, OuterRef
 from django.db import models
 from django.urls import reverse
 
@@ -12,7 +14,35 @@ class DadosAtivoManager(models.Manager):
     
 class ClientesDistintosManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True,cliente__tipo='CLIENTE')
+        subquery = (
+            super()
+            .get_queryset()
+            .filter(is_active=True, cliente__id=OuterRef('cliente__id'))
+            .order_by('-data_registro')
+            .values('id')[:1]
+        )
+
+        return (
+            super()
+            .get_queryset()
+            .filter(id__in=Subquery(subquery))
+            .order_by('-data_registro')
+        )
+
+    
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(is_active=True,cliente__tipo='CLIENTE')
+    
+    # def get_queryset(self):
+    #     ultimos_ids = (
+    #         super()
+    #         .get_queryset()
+    #         .filter(is_active=True)
+    #         .values('cliente__nome')  # ou 'username'
+    #         .annotate(ultimo_id=Max('cliente__id'))
+    #         .values_list('ultimo_id', flat=True)
+    #     )
+    #     return super().get_queryset().filter(id__in=ultimos_ids)
 
 
 class DiabeticosTipo1Manager(models.Manager):
