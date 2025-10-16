@@ -17,7 +17,7 @@ from django.conf import settings
 
 class Conecta:
     @staticmethod
-    def montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_atual, descricao_alimentacao):
+    def montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_meta, glicemia_atual, descricao_alimentacao):
         """
         Monta um JSON com as informações fornecidas.
         """
@@ -26,6 +26,7 @@ class Conecta:
             "tipo_diabetes": tipo_diabetes, 
             "bolus_alimentar": bolus_alimentar,
             "bolus_correcao": bolus_correcao,
+            "glicemia_meta": glicemia_meta,
             "glicemia_atual": glicemia_atual,
             "descricao_alimentacao": descricao_alimentacao
         }
@@ -41,12 +42,12 @@ class Conecta:
         lista_alimentos = data.get("lista_alimentos", [])
         calorias = data.get("total_calorias")
         carboidratos = data.get("total_carboidratos")
-        qtd_glicemia = data.get("glicemia_vigente")
+        # qtd_glicemia = data.get("glicemia_vigente")
         qtd_insulina = data.get("quantidade_insulina_recomendada")
-        
-        return lista_alimentos, carboidratos, calorias, qtd_glicemia, qtd_insulina
-        
-    
+
+        return lista_alimentos, carboidratos, calorias, qtd_insulina
+
+
     @staticmethod
     def gera_recomendacoes(contexto_json):
         try:
@@ -59,8 +60,8 @@ class Conecta:
 
             # Define the expected response format from the AI - Optimized for conciseness
             resposta_desejada = "Retorne SOMENTE um JSON com um único objeto com o nome dos alimentos, quantidade de carboidrato, quantidade de caloria, quantidade de glicemia enviada e quantidade de insulina necessária."
-            
-            exemplo_json = '{"lista_alimentos": "", "total_carboidratos": , "total_calorias": , "glicemia_vigente": , "quantidade_insulina_recomendada": }'
+
+            exemplo_json = '{"lista_alimentos": "", "total_carboidratos": , "total_calorias": , "glicemia_meta": , "quantidade_insulina_recomendada": }'
 
             # Construct the prompt using f-strings for clarity and efficiency
             # The context_json is included here, and its size will impact token usage
@@ -76,16 +77,7 @@ class Conecta:
             {exemplo_json}
             """
 
-
-            # Generate content using the specified model and prompt
-            # response = client.models.generate_content(
-            #         model="gemini-2.5-flash",
-            #         contents=prompt
-            # )
-            
             response = client.generate_content(prompt)
-
-            print('cheguei...' ,response)
 
             # Extract and clean the JSON part from the response
             resposta_json = response.candidates[0].content.parts[0].text.strip().strip('```json').strip('```')

@@ -39,24 +39,30 @@
 				{% for refeicao in object_list %}
 					<tr>
 						<td>
-							{{ refeicao.cliente }}
+							{{ refeicao.cliente.cliente.nome }}
+							<br><small class="text-muted"> {{ refeicao.cliente.tipo_diabetes|default:"SEM DIABETES" }} </small>
+							<br><small class="text-muted"> Bolus alimentar: {{ refeicao.cliente.bolus_alimentar|default:"SEM" }} </small>
+							<br><small class="text-muted"> Bolus correção: {{ refeicao.cliente.bolus_correcao|default:"SEM" }} </small>
+							<br><small class="text-muted"> Glicemia meta: {{ refeicao.cliente.glicemia_meta|default:"SEM" }} </small>
 						</td>
 						<td>
 							{{ refeicao.registro_alimentacao|linebreaksbr }}
 							{% if refeicao.glicemia_vigente %}
 								<br><small class="text-muted">Glicemia vigente: {{ refeicao.glicemia_vigente }} mg/dL</small>
 							{% endif %}							
+							{% if refeicao.total_carboidratos %}
+								<br><small class="text-muted">Total carb.: {{ refeicao.total_carboidratos }} g</small>
+							{% endif %}
+							{% if refeicao.total_calorias %}
+								<br><small class="text-muted">Total kcal.: {{ refeicao.total_calorias }} kcal</small>
+							{% endif %}
 						</td>
 						<td>
 							{% if refeicao.quantidade_insulina_recomendada %}
-								<br><small class="text-muted">Insulina recomendada: {{ refeicao.quantidade_insulina_recomendada }} U</small>
+								Insulina: <span class="label label-info"> {{ refeicao.quantidade_insulina_recomendada }} U </span>
+								
 							{% endif %}
-							{% if refeicao.total_carboidratos %}
-								<br><small class="text-muted">Total de carboidratos: {{ refeicao.total_carboidratos }} g</small>
-							{% endif %}
-							{% if refeicao.total_calorias %}
-								<br><small class="text-muted">Total de calorias: {{ refeicao.total_calorias }} kcal</small>
-							{% endif %}
+							
 						</td>
 						<td class="text-center">
 							{% bootstrap_button content='' href=refeicao.get_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}

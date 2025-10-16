@@ -32,17 +32,23 @@ class RegistroRefeicao(models.Model):
             self.slug = gerar_hash()
             
         medicamentos = [med.nome_comercial for med in self.cliente.medicamentos.all()] if self.cliente.medicamentos.exists() else []
+        tipo_diabetes = self.cliente.tipo_diabetes or "SEM DIABETES"
         bolus_alimentar = self.cliente.bolus_alimentar or 1 #1 unidade de insulina para cada 10g de carboidrato
         bolus_correcao = self.cliente.bolus_correcao or 1 #1 unidade de insulina para cada 10mg/dL acima da meta
+        glicemia_meta = self.cliente.glicemia_meta or 100
         glicemia_atual = self.glicemia_vigente
-        tipo_diabetes = self.cliente.tipo_diabetes or "SEM DIABETES"
         descricao_alimentacao = self.registro_alimentacao
         
-        contexto_json = Conecta.montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_atual, descricao_alimentacao)
+        contexto_json = Conecta.montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_meta, glicemia_atual, descricao_alimentacao)
         
         resposta_json = Conecta.gera_recomendacoes(contexto_json)
+        lista_alimentos = []
 
         print(Conecta.desmontar_json(resposta_json))
+        lista_alimentos, carboidratos, calorias, qtd_insulina = Conecta.desmontar_json(resposta_json)
+        self.total_carboidratos = int(carboidratos)
+        self.total_calorias = int(calorias)
+        self.quantidade_insulina_recomendada = int(qtd_insulina)
             
         super(RegistroRefeicao, self).save(*args, **kwargs)
 
