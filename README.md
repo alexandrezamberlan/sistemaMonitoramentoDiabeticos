@@ -1,50 +1,77 @@
 # Sistema de Monitoramento de Diabetes
+    Projeto desenvolvido por alunos dos cursos da Computação, em uma parceria com o Laboratório de Práticas da Computação UFN e a empresa ER Clinic.
 
-Sistema Web Python-Django que gerencia alimentação, exercícios, medicação e insulina de pacientes diabeticos
+## Registro no INPI: ????
 
-## Registro INPI: ???
+## Versão:
+    1.0 de Novembro de 2021
+    1.1 de Março de 2022
+    1.2 de Junho de 2022
+    1.3 de Dezembro de 2025
 
-Este projeto faz parte do Laboratório de Práticas da Computação UFN e a disciplina Tecnologias Inteligentes Aplicadas à Saúde, como uma prática extensionista no ensino
+## Apoio da Universidade Franciscana
 
-## Integrantes
-    - Camille Rodrigues - Sistemas de Informação
-    
-    - Gabriel Morais - Ciência da Computação
-    - Guilherme Henriques - Ciência da Computação
-    - Guilherme Scher - Ciência da Computação
-    - Pedro Canabarro - Ciência da Computação
+## Colaboradores:
+### UFN
+    Professores:
+        Alexandre Zamberlan - responsável técnico e integrante do Laboratório de Práticas da Computação
+        Ana Paula Canal - coordenadora dos cursos de Computação UFN
+        Elisangela Colpo - Professora do Curso de Nutrição
+        Franceliane Jobim Benedetti - Professora do Curso de Nutrição
+        Ricardo Frohlich da Silva - coordenador adjunto dos cursos de Computação UFN
+        Sylvio André Garcia Vieira - coordenador do Laboratório de Práticas da Computação
 
-    - Professora Ana Paula Canal
-    - Professor Ricardo Frohlich da Silva
-    - Professor Sylvio Vieira
+    Alunos
+        Alisson de Almeida Lamarque - Sistemas de Informação
+        Camille Rodrigues - Sistemas de Informação
+        Claython da Silva Ludovico - Ciência da Computação
+        Eduardo Pavani Palharini - Sistemas de Informação
+        Emanuel Fagan Bissacotti - Ciência da Computação
+        Eric Pereira Posser - Sistemas de Informação
+        Fernando Torres Moreira - Ciência da Computação
+        Gabriel Braganholo - Ciência da Computação
+        Gabriel Segala Soares - Ciência da Computação
+        Guilherme Henriques - Ciência da Computação
+        Guilherme Scher - Ciência da Computação
+        Gustavo Iago Magalhães Becker - Ciência da Computação
+        João Pedro Toaldo - Sistemas de Informação
+        Joseph Strücker Calgaro - Sistemas de Informação
+        Leonardo Barros Schroter - Sistemas de Informação
+        Luiz Batista Cardoso - Ciência da Computação
+        Luiz Henrique Baldissera Ghisleri - Ciência da Computação
+        Matheus Filipe Nascimento de Freitas - Sistemas de Informação
+        Matheus Uliana Rossato - Sistemas de Informação
+        Pedro Henrique Canabarro - Ciência da Computação
+        Pedro Kröning Corrêa Balen - Ciência da Computação
+        Rian Beskow Friedrich - Ciência da Computação
+        Robson Cezário - Sistemas de Informação
+### Consultoria:
+    Gedson Leal Gomes - Educador Físico e Personal Trainer
+    Empresa ER Clinic - Robertson Ebling dos Santos (egresso do curso de Sistemas de Informação UFN)
 
-    - Consultor da Empresa parceira ER Clinic - Robertson Ebling dos Santos
 
-## Estruturação
+# Estruturação
 
 - apps
-    - usuario
+    - (OK)usuario
         - tipos: administrador, cliente, nutricionista educador físico, médico 
         - nome
         - email (chave primária)
         - celular
         - cpf
-        
         - data_nascimento
         - peso ??
         - altura ??
         - relação carb_insulina
         - relação glicemina_insulina
-
         - is_active
         - slug
-
         Obs.:
             - usuário faz autocadastro (exceto administrador)
                 - colocar campo de aceite dos termos de uso
                 - verificar se está mandando por email a ativação do usuário
     
-    - alimento
+    - (OK)alimento
         - descrição do alimento
         - unidade do alimento
         - quantidade calorias por unidade do alimento
@@ -53,20 +80,18 @@ Este projeto faz parte do Laboratório de Práticas da Computação UFN e a disc
         - is_active
         - slug
 
-    - atividade_fisica 
+    - (OK)atividade_fisica 
         - nome
         - detalhes da atividade (texto)
         - tipo da atividade
         - is_active
         - slug
         
-    - medicamento
+    - (OK)medicamento
         - nome fantasia
         - nome referência
         - is_active
         - slug
-
-    
 
 ## Sugestões de CSS
     - https://bootswatch.com/3/
