@@ -42,10 +42,10 @@ class Conecta:
         lista_alimentos = data.get("lista_alimentos", [])
         calorias = data.get("total_calorias")
         carboidratos = data.get("total_carboidratos")
-        # qtd_glicemia = data.get("glicemia_vigente")
         qtd_insulina = data.get("quantidade_insulina_recomendada")
+        nome_insulina = data.get("nome_insulina", "")
 
-        return lista_alimentos, carboidratos, calorias, qtd_insulina
+        return lista_alimentos, carboidratos, calorias, qtd_insulina, nome_insulina
 
 
     @staticmethod
@@ -59,9 +59,9 @@ class Conecta:
             papel_esperado_ia = "Nutricionista especializada em contagem de carboidratos, calorias e cálculo de insulina."
 
             # Define the expected response format from the AI - Optimized for conciseness
-            resposta_desejada = "Retorne SOMENTE um JSON com um único objeto com o nome dos alimentos, quantidade de carboidrato, quantidade de caloria, quantidade de glicemia enviada e quantidade de insulina necessária."
+            resposta_desejada = "Retorne SOMENTE um JSON com um único objeto com o nome dos alimentos, quantidade de carboidrato, quantidade de caloria, quantidade de insulina necessária e o nome da insulina a ser utilizada."
 
-            exemplo_json = '{"lista_alimentos": "", "total_carboidratos": , "total_calorias": , "glicemia_meta": , "quantidade_insulina_recomendada": }'
+            exemplo_json = '{"lista_alimentos": "", "total_carboidratos": , "total_calorias": , "quantidade_insulina_recomendada": , "nome_insulina": ""}'
 
             # Construct the prompt using f-strings for clarity and efficiency
             # The context_json is included here, and its size will impact token usage
@@ -87,32 +87,6 @@ class Conecta:
         except Exception as e:
             erro = f"Não foi possível conectar no servidor para gerar recomendações. Por favor, tente novamente mais tarde. Erro: {str(e)}"
             return erro
-    
-    @staticmethod
-    def houve_alteracao_banco():
-        try:
-            connection = connections['default']
-            executor = MigrationExecutor(connection)
-
-            # Pega as migrações aplicadas e as pendentes
-            applied_migrations = executor.loader.applied_migrations
-            all_migrations = executor.loader.graph.nodes.keys()
-
-            # Diferença indica migrações pendentes
-            pending = set(all_migrations) - set(applied_migrations)
-
-            if pending:
-                print("Há migrações pendentes:")
-                for mig in pending:
-                    print(mig)
-                return True
-            else:
-                print("Todas as migrações estão aplicadas.")
-                return False
-        except Exception as e:
-            print('Erro', e)
-            return False
-
         
     @staticmethod
     def conecta_api(): #conecta com api gemini
@@ -345,3 +319,27 @@ class Conecta:
         })
         return template.render(context)
 
+    @staticmethod
+    def houve_alteracao_banco():
+        try:
+            connection = connections['default']
+            executor = MigrationExecutor(connection)
+
+            # Pega as migrações aplicadas e as pendentes
+            applied_migrations = executor.loader.applied_migrations
+            all_migrations = executor.loader.graph.nodes.keys()
+
+            # Diferença indica migrações pendentes
+            pending = set(all_migrations) - set(applied_migrations)
+
+            if pending:
+                print("Há migrações pendentes:")
+                for mig in pending:
+                    print(mig)
+                return True
+            else:
+                print("Todas as migrações estão aplicadas.")
+                return False
+        except Exception as e:
+            print('Erro', e)
+            return False

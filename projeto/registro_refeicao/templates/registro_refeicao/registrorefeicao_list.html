@@ -58,10 +58,13 @@
 							{% endif %}
 						</td>
 						<td>
-							{% if refeicao.quantidade_insulina_recomendada %}
-								Insulina: <span class="label label-info"> {{ refeicao.quantidade_insulina_recomendada }} U </span>
-								
+							{% if refeicao.nome_insulina %}
+								Insulina <b>{{ refeicao.nome_insulina }}</b>
 							{% endif %}
+							{% if refeicao.quantidade_insulina_recomendada %}
+								<span class="label label-info"> {{ refeicao.quantidade_insulina_recomendada }} U </span>	
+							{% endif %}
+							
 							
 						</td>
 						<td class="text-center">

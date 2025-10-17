@@ -11,6 +11,7 @@ class RegistroRefeicao(models.Model):
     registro_alimentacao = models.TextField('Registro alimentar *', help_text='Descreva o que foi consumido na refeição.', max_length=1000)
     glicemia_vigente = models.PositiveIntegerField('Glicemia vigente (mg/dL)', null=True, blank=True, help_text='Valor da glicemia antes da refeição, se disponível')
     quantidade_insulina_recomendada = models.PositiveIntegerField('Quantidade de insulina recomendada (U)', null=True, blank=True, help_text='Unidades de insulina recomendada para a refeição, se aplicável')
+    nome_insulina = models.CharField('Nome da insulina recomendada', max_length=200, null=True, blank=True, help_text='Nome da insulina recomendada para a refeição, se aplicável')
     total_carboidratos = models.PositiveIntegerField('Total de carboidratos (g)', null=True, blank=True, help_text='Total de carboidratos consumidos na refeição, se conhecido')
     total_calorias = models.PositiveIntegerField('Total de calorias (kcal)', null=True, blank=True, help_text='Total de calorias consumidas na refeição, se conhecido')
     data_hora_registro = models.DateTimeField('Data e hora do registro', auto_now=True)
@@ -43,13 +44,12 @@ class RegistroRefeicao(models.Model):
         
         resposta_json = Conecta.gera_recomendacoes(contexto_json)
         lista_alimentos = []
-
-        print(Conecta.desmontar_json(resposta_json))
-        lista_alimentos, carboidratos, calorias, qtd_insulina = Conecta.desmontar_json(resposta_json)
+        lista_alimentos, carboidratos, calorias, qtd_insulina, nome_insulina = Conecta.desmontar_json(resposta_json)
         self.total_carboidratos = int(carboidratos)
         self.total_calorias = int(calorias)
         self.quantidade_insulina_recomendada = int(qtd_insulina)
-            
+        self.nome_insulina = nome_insulina
+
         super(RegistroRefeicao, self).save(*args, **kwargs)
 
     @property

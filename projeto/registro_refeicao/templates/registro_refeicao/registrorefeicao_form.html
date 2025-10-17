@@ -10,8 +10,15 @@
 
 {% block content %}
 
+<script>
+  function conectar_llm(){
+      $("#btnConectar").html('Aguarde...').attr('disabled', true);
+      $("#formRegistroRefeicao").submit();
+  }
+</script>
 
-<form id="formRelatorio" class="form" role="form" method="POST">
+
+<form id="formRegistroRefeicao" class="form" role="form" method="POST">
   {% csrf_token %}
   
   {% for error in form.non_field_errors %}
@@ -20,8 +27,11 @@
     
   {% bootstrap_form form %}
     
-  {% buttons submit='Gravar' %}
+  {% comment %} {% buttons submit='Gravar' %}
       <a href="javascript:history.go(-1);" class="btn btn-warning" role="button">Voltar</a>
-  {% endbuttons %}  
+  {% endbuttons %}   {% endcomment %}
+
+  <button id="btnConectar" type="button" class="btn btn-default" onclick="conectar_llm();">Gravar</button>
+  <a href="javascript:history.go(-1);" class="btn btn-warning" role="button">Voltar</a>
 </form>
 {% endblock %}
