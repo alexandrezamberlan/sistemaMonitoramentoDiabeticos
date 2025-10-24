@@ -15,6 +15,41 @@
       $("#btnConectar").html('Aguarde...').attr('disabled', true);
       $("#formRegistroRefeicao").submit();
   }
+
+  let recognizing = false;
+  let recognition;
+
+  function startDictation() {
+      if (recognizing) {
+          recognition.stop();
+          return;
+      }
+      
+      recognition = new webkitSpeechRecognition(); // Para Chrome
+      recognition.lang = "pt-BR";  // Definir o idioma para português do Brasil
+      recognition.continuous = true;  // Continuar gravando até o usuário parar
+      recognition.interimResults = true;  // Resultados parciais enquanto a voz é reconhecida
+
+      recognition.onstart = function () {
+          recognizing = true;
+          document.getElementById("dictationBtn").innerHTML = "Parar de gravar";
+      };
+
+      recognition.onend = function () {
+          recognizing = false;
+          document.getElementById("dictationBtn").innerHTML = "Iniciar gravação";
+      };
+
+      recognition.onresult = function (event) {
+          let transcript = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+              transcript += event.results[i][0].transcript;
+          }
+          document.getElementById("id_text_field").value = transcript;
+      };
+
+      recognition.start();
+  }
 </script>
 
 
@@ -25,12 +60,15 @@
     {% bootstrap_alert error 'danger' %}
   {% endfor %}
     
-  {% bootstrap_form form %}
-    
-  {% comment %} {% buttons submit='Gravar' %}
-      <a href="javascript:history.go(-1);" class="btn btn-warning" role="button">Voltar</a>
-  {% endbuttons %}   {% endcomment %}
+  <!-- {% bootstrap_form form %} -->
+  {% bootstrap_field form.cliente %}
+  {% bootstrap_field form.glicemia_vigente %}
+  {% bootstrap_field form.registro_alimentacao %}
 
+  <!-- Botão para iniciar a gravação de voz -->
+  <button type="button" id="dictationBtn" class="btn btn-info" onclick="startDictation()">Iniciar gravação</button>
+  <hr>
+  
   <button id="btnConectar" type="button" class="btn btn-default" onclick="conectar_llm();">Gravar</button>
   <a href="javascript:history.go(-1);" class="btn btn-warning" role="button">Voltar</a>
 </form>
