@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Ditado</title>
+    <script>
+        let recognizing = false;
+        let recognition;
+
+        function startDictation() {
+            if (recognizing) {
+                recognition.stop();
+                return;
+            }
+            
+            recognition = new webkitSpeechRecognition(); // Para Chrome
+            recognition.lang = "pt-BR";  // Definir o idioma para português do Brasil
+            recognition.continuous = true;  // Continuar gravando até o usuário parar
+            recognition.interimResults = true;  // Resultados parciais enquanto a voz é reconhecida
+
+            recognition.onstart = function () {
+                recognizing = true;
+                document.getElementById("dictationBtn").innerHTML = "Parar de gravar";
+            };
+
+            recognition.onend = function () {
+                recognizing = false;
+                document.getElementById("dictationBtn").innerHTML = "Iniciar gravação";
+            };
+
+            recognition.onresult = function (event) {
+                let transcript = "";
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById("id_text_field").value = transcript;
+            };
+
+            recognition.start();
+        }
+    </script>
+</head>
+<body>
+    <h1>Formulário de Ditado</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <!-- Botão para iniciar a gravação de voz -->
+        <button type="button" id="dictationBtn" onclick="startDictation()">Iniciar gravação</button>
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
