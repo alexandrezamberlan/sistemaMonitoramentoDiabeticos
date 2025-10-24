@@ -45,7 +45,7 @@
           for (let i = event.resultIndex; i < event.results.length; i++) {
               transcript += event.results[i][0].transcript;
           }
-          document.getElementById("id_text_field").value = transcript;
+          document.getElementById("id_registro_alimentacao").value = transcript;
       };
 
       recognition.start();
@@ -63,7 +63,7 @@
   <!-- {% bootstrap_form form %} -->
   {% bootstrap_field form.cliente %}
   {% bootstrap_field form.glicemia_vigente %}
-  {% bootstrap_field form.registro_alimentacao %}
+  {% bootstrap_field form.registro_alimentacao id='id_registro_alimentacao' %}
 
   <!-- Botão para iniciar a gravação de voz -->
   <button type="button" id="dictationBtn" class="btn btn-info" onclick="startDictation()">Iniciar gravação</button>
