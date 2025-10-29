@@ -60,11 +60,13 @@
   {% for error in form.non_field_errors %}
     {% bootstrap_alert error 'danger' %}
   {% endfor %}
-    
-  <!-- {% bootstrap_form form %} -->
+  
+  {% comment %} {% bootstrap_form form %} {% endcomment %}
+
   {% bootstrap_field form.cliente %}
   {% bootstrap_field form.glicemia_vigente %}
   {% bootstrap_field form.registro_alimentacao id='id_registro_alimentacao' %}
+  
 
   <!-- Botão para iniciar a gravação de voz -->
   <button type="button" id="dictationBtn" class="btn btn-info" onclick="startDictation()">Iniciar gravação</button>

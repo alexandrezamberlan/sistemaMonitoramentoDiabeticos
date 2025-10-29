@@ -68,13 +68,11 @@ class Conecta:
             prompt = f"""
             Papel: {papel_esperado_ia}
 
-            Contexto:
-            {contexto_json}
+            Contexto: {contexto_json}
 
             Resposta: {resposta_desejada}
             
-            Exemplo de JSON esperado:
-            {exemplo_json}
+            Exemplo de JSON esperado: {exemplo_json}
             """
 
             response = client.generate_content(prompt)
