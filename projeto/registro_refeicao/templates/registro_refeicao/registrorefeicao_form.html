@@ -11,45 +11,46 @@
 {% block content %}
 
 <script>
-  function conectar_llm(){
-      $("#btnConectar").html('Aguarde...').attr('disabled', true);
-      $("#formRegistroRefeicao").submit();
-  }
+    function conectar_llm(){
+        $("#btnConectar").html('Aguarde...').attr('disabled', true);
+        $("#formRegistroRefeicao").submit();
+    }
 
-  let recognizing = false;
-  let recognition;
+    let reconhecendo = false;
+    let reconhecedor;
 
-  function startDictation() {
-      if (recognizing) {
-          recognition.stop();
-          return;
-      }
+    function startDictation() {
+        if (reconhecendo) {
+            reconhecedor.stop();
+            return;
+        }
       
-      recognition = new webkitSpeechRecognition(); // Para Chrome
-      recognition.lang = "pt-BR";  // Definir o idioma para português do Brasil
-      recognition.continuous = true;  // Continuar gravando até o usuário parar
-      recognition.interimResults = true;  // Resultados parciais enquanto a voz é reconhecida
+        reconhecedor = new webkitSpeechRecognition(); // Para Chrome
+        reconhecedor.lang = "pt-BR";  // Definir o idioma para português do Brasil
+        reconhecedor.continuous = true;  // Continuar gravando até o usuário parar
+        reconhecedor.interimResults = true;  // Resultados parciais enquanto a voz é reconhecida
 
-      recognition.onstart = function () {
-          recognizing = true;
-          document.getElementById("dictationBtn").innerHTML = "Parar de gravar";
-      };
+        reconhecedor.onstart = function () {
+            reconhecendo = true;
+            document.getElementById("dictationBtn").innerHTML = "Parar de gravar";
+        };
 
-      recognition.onend = function () {
-          recognizing = false;
-          document.getElementById("dictationBtn").innerHTML = "Iniciar gravação";
-      };
+        reconhecedor.onend = function () {
+            reconhecendo = false;
+            document.getElementById("dictationBtn").innerHTML = "Iniciar gravação";
+        };
 
-      recognition.onresult = function (event) {
-          let transcript = "";
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-              transcript += event.results[i][0].transcript;
-          }
-          document.getElementById("id_registro_alimentacao").value = transcript;
-      };
+        reconhecedor.onresult = function (event) {
+            let transcript = "";
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                transcript += event.results[i][0].transcript;
+            }
+            document.getElementById("id_registro_alimentacao").value = transcript;
+            console.log("Transcrição atual: ", transcript);
+        };
 
-      recognition.start();
-  }
+        reconhecedor.start();
+    }
 </script>
 
 
