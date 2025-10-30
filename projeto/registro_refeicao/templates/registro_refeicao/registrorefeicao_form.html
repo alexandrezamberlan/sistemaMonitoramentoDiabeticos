@@ -10,46 +10,132 @@
 
 {% block content %}
 
-<script>
-    function conectar_llm(){
+{% comment %} <script>
+    let recognition;
+    let isRecording = false;
+
+    // Verifica compatibilidade do navegador
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert('Seu navegador não suporta reconhecimento de voz.');
+    } else {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'pt-BR';
+        recognition.interimResults = true;
+        recognition.continuous = true;
+
+        recognition.onresult = event => {
+            // Campo de saída
+            const outputField = document.getElementById('id_registro_alimentacao');
+            let transcript = '';
+
+            // Concatena os resultados parciais
+            for (let i = 0; i < event.results.length; i++) {
+                transcript += event.results[i][0].transcript + ' ';
+            }
+
+            // Acrescenta o texto ditado ao conteúdo atual
+            const textoAtual = outputField.value.trim();
+            const novoTexto = textoAtual ? textoAtual + ' ' + transcript.trim() : transcript.trim();
+
+            outputField.value = novoTexto;
+        };
+
+        recognition.onend = () => {
+            isRecording = false;
+            document.getElementById('dictationBtn').textContent = 'Iniciar Gravação';
+        };
+
+        recognition.onerror = event => {
+            console.error('Erro no reconhecimento de voz:', event.error);
+            const outputField = document.getElementById('id_registro_alimentacao');
+            outputField.value += '\n[Erro ao reconhecer fala: ' + event.error + ']';
+            isRecording = false;
+            document.getElementById('dictationBtn').textContent = 'Iniciar Gravação';
+        };
+    }
+
+    // Função chamada no botão
+    function startDictation() {
+        const startButton = document.getElementById('dictationBtn');
+
+        if (!SpeechRecognition) return;
+
+        if (!isRecording) {
+            recognition.start();
+            isRecording = true;
+            startButton.textContent = 'Parar Gravação';
+        } else {
+            recognition.stop();
+            isRecording = false;
+            startButton.textContent = 'Iniciar Gravação';
+        }
+    }
+
+    // Função de conexão
+    function conectar_llm() {
         $("#btnConectar").html('Aguarde...').attr('disabled', true);
         $("#formRegistroRefeicao").submit();
     }
+</script> {% endcomment %}
 
-    let reconhecendo = false;
-    let reconhecedor;
 
-    function startDictation() {
-        if (reconhecendo) {
-            reconhecedor.stop();
-            return;
-        }
-      
-        reconhecedor = new webkitSpeechRecognition(); // Para Chrome
-        reconhecedor.lang = "pt-BR";  // Definir o idioma para português do Brasil
-        reconhecedor.continuous = true;  // Continuar gravando até o usuário parar
-        reconhecedor.interimResults = true;  // Resultados parciais enquanto a voz é reconhecida
+<script>
+    let recognition;
+    let isRecording = false;
 
-        reconhecedor.onstart = function () {
-            reconhecendo = true;
-            document.getElementById("dictationBtn").innerHTML = "Parar de gravar";
-        };
+    // Verifica compatibilidade do navegador
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert('Seu navegador não suporta reconhecimento de voz.');
+    } else {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'pt-BR';
+        recognition.interimResults = true;
+        recognition.continuous = true;
 
-        reconhecedor.onend = function () {
-            reconhecendo = false;
-            document.getElementById("dictationBtn").innerHTML = "Iniciar gravação";
-        };
-
-        reconhecedor.onresult = function (event) {
-            let transcript = "";
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                transcript += event.results[i][0].transcript;
+        recognition.onresult = event => {
+            let transcript = '';
+            for (let i = 0; i < event.results.length; i++) {
+                transcript += event.results[i][0].transcript + ' ';
             }
-            document.getElementById("id_registro_alimentacao").value = transcript;
-            console.log("Transcrição atual: ", transcript);
+            document.getElementById('id_registro_alimentacao').value = transcript.trim();
         };
 
-        reconhecedor.start();
+        recognition.onend = () => {
+            isRecording = false;
+            document.getElementById('dictationBtn').textContent = 'Iniciar Gravação';
+        };
+
+        recognition.onerror = event => {
+            console.error('Erro no reconhecimento de voz:', event.error);
+            document.getElementById('id_registro_alimentacao').value = 'Erro ao reconhecer fala: ' + event.error;
+            isRecording = false;
+            document.getElementById('dictationBtn').textContent = 'Iniciar Gravação';
+        };
+    }
+
+    // Função chamada no botão
+    function startDictation() {
+        const startButton = document.getElementById('dictationBtn');
+
+        if (!SpeechRecognition) return;
+
+        if (!isRecording) {
+            recognition.start();
+            isRecording = true;
+            startButton.textContent = 'Parar Gravação';
+        } else {
+            recognition.stop();
+            isRecording = false;
+            startButton.textContent = 'Iniciar Gravação';
+        }
+    }
+
+    // Função de conexão
+    function conectar_llm() {
+        $("#btnConectar").html('Aguarde...').attr('disabled', true);
+        $("#formRegistroRefeicao").submit();
     }
 </script>
 
@@ -60,19 +146,19 @@
   {% for error in form.non_field_errors %}
     {% bootstrap_alert error 'danger' %}
   {% endfor %}
-  
-  {% comment %} {% bootstrap_form form %} {% endcomment %}
 
   {% bootstrap_field form.cliente %}
   {% bootstrap_field form.glicemia_vigente %}
   {% bootstrap_field form.registro_alimentacao id='id_registro_alimentacao' %}
-  
 
-  <!-- Botão para iniciar a gravação de voz -->
+  <!-- Botão e indicador de gravação -->
   <button type="button" id="dictationBtn" class="btn btn-info" onclick="startDictation()">Iniciar gravação</button>
+  <span id="recordingIndicator"></span>
   <hr>
   
   <button id="btnConectar" type="button" class="btn btn-default" onclick="conectar_llm();">Gravar</button>
   <a href="javascript:history.go(-1);" class="btn btn-warning" role="button">Voltar</a>
 </form>
+
+
 {% endblock %}
