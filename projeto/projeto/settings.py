@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     
     'gmailapi_backend',
     
-    'appmembro',
+    'appcliente',
 
     'alimento',
     'aviso',

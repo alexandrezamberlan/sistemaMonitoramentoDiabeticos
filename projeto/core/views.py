@@ -6,21 +6,21 @@ from django.views.generic import RedirectView
 
 from aviso.models import Aviso
 
-from utils.decorators import LoginRequiredMixin,  CoordenadorRequiredMixin
+from utils.decorators import LoginRequiredMixin,  NutricionistaRequiredMixin
 
-class HomeRedirectView(LoginRequiredMixin, CoordenadorRequiredMixin, RedirectView):
+class HomeRedirectView(LoginRequiredMixin, NutricionistaRequiredMixin, RedirectView):
     def get_redirect_url(self, **kwargs):
         return reverse('home')
     
 class HomeRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, **kwargs):
-        if self.request.user.tipo == 'ADMINISTRADOR' or self.request.user.tipo == 'COORDENADOR' or self.request.user.tipo == 'MINISTRANTE':
+        if self.request.user.tipo == 'ADMINISTRADOR' or self.request.user.tipo == 'NUTRICIONISTA' or self.request.user.tipo == 'MEDICO':
             return reverse('home')
-        elif self.request.user.tipo == 'PARTICIPANTE':
-            return reverse('appmembro_home')   
+        elif self.request.user.tipo == 'CLIENTE':
+            return reverse('appcliente_home')   
         
         
-class HomeView(LoginRequiredMixin, CoordenadorRequiredMixin, TemplateView):
+class HomeView(LoginRequiredMixin, NutricionistaRequiredMixin, TemplateView):
     template_name = 'core/home.html'
     
     def get_context_data(self, **kwargs):

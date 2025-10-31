@@ -16,9 +16,8 @@ class Aviso(models.Model):
     #1 campo da tupla fica no banco de dados
     #2 campo da tupla eh mostrado para o usuario
     DESTINO = (
-        ('TODOS', 'Todos'),
-        ('COORDENADOR', 'Coordenador de Evento' ),
-        ('MEMBRO', 'Membro' ),        
+        ('TODOS', 'Todos'),        
+        ('CLIENTE', 'Cliente' ),        
     )    
     
     titulo = models.CharField('Título do aviso *', unique=True, max_length=100, help_text='* Campos obrigatórios')
@@ -26,7 +25,7 @@ class Aviso(models.Model):
     data = models.DateField('Data do aviso', auto_now=True)
     destinatario = models.CharField('Destinatários *', max_length=20, choices=DESTINO, default="TODOS")
     enviado = models.BooleanField('Selecione para enviar aviso por email aos destinatários', default=False, help_text='Se marcado, aviso é enviado uma vez aos detinatários ativos')
-    is_active = models.BooleanField('Selecione para publicar na home dos usuários o aviso', default=True, help_text='Se ativo, o aviso aparece na home dos participantes')
+    is_active = models.BooleanField('Selecione para publicar na home dos usuários o aviso', default=True, help_text='Se ativo, o aviso aparece na home dos clientes')
     
     slug = models.SlugField('Hash',max_length= 200,null=True,blank=True)
 

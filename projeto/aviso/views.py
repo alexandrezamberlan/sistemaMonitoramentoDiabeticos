@@ -33,10 +33,8 @@ class AvisoCreateView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
         if (aviso.enviado):
             if aviso.destinatario == 'TODOS':
                 destinatarios = Usuario.objects.filter(is_active=True)                
-            elif aviso.destinatario == 'COORDENADOR':
-                destinatarios = Usuario.objects.filter(is_active=True, tipo='COORDENADOR')
             else:
-                destinatarios = Usuario.objects.filter(is_active=True, tipo='MEMBRO')
+                destinatarios = Usuario.objects.filter(is_active=True, tipo='CLIENTE')
             
             aviso.save()
         
@@ -97,10 +95,8 @@ class AvisoEnviaEmail(LoginRequiredMixin, StaffRequiredMixin, RedirectView):
 
         if aviso.destinatario == 'TODOS':
             destinatarios = Usuario.objects.filter(is_active=True)
-        elif aviso.destinatario == 'COORDENADOR':
-            destinatarios = Usuario.objects.filter(is_active=True, tipo='COORDENADOR')
         else:
-            destinatarios = Usuario.objects.filter(is_active=True, tipo='MEMBRO')
+            destinatarios = Usuario.objects.filter(is_active=True, tipo='CLIENTE')
     
         try:
             """ enviar e-mail para destinatarios """                

@@ -12,14 +12,14 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from mail_templated import EmailMessage
 
-from utils.decorators import LoginRequiredMixin, StaffRequiredMixin, CoordenadorRequiredMixin
+from utils.decorators import LoginRequiredMixin, StaffRequiredMixin, NutricionistaRequiredMixin
 
 from .models import Usuario
 from .forms import BuscaUsuarioForm
 from .forms import UsuarioRegisterForm
 
 
-class UsuarioListView(LoginRequiredMixin, CoordenadorRequiredMixin, ListView):
+class UsuarioListView(LoginRequiredMixin, NutricionistaRequiredMixin, ListView):
     model = Usuario
 
     def get_context_data(self, **kwargs):
@@ -132,4 +132,4 @@ class UsuarioRegisterActivateView(RedirectView):
         self.object.save()
         login(self.request, self.object)
         messages.success(self.request, 'Obrigado por acessar o Sistema Online de Monitoramento da Diabetes - SOMDiabetes. Esta é a sua área restrita.')
-        return reverse('appmembro_home')
+        return reverse('appcliente_home')

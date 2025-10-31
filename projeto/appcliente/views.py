@@ -32,7 +32,7 @@ from reportlab.lib import colors
 
 from mail_templated import EmailMessage
 
-from utils.decorators import LoginRequiredMixin, MembroRequiredMixin
+from utils.decorators import LoginRequiredMixin, ClienteRequiredMixin
 
 
 from aviso.models import Aviso
@@ -41,28 +41,28 @@ from aviso.models import Aviso
 
 from usuario.models import Usuario
 
-from .forms import MembroCreateForm
+from .forms import ClienteCreateForm
 
 
 
-class HomeView(LoginRequiredMixin, MembroRequiredMixin, TemplateView):
-    template_name = 'appmembro/home.html'
+class HomeView(LoginRequiredMixin, ClienteRequiredMixin, TemplateView):
+    template_name = 'appcliente/home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['avisos'] = Aviso.ativos.filter(destinatario__in=[self.request.user.tipo, 'TODOS'])[0:2]
         return context
 
-class AboutView(LoginRequiredMixin, MembroRequiredMixin, TemplateView):
-    template_name = 'appmembro/about.html'
+class AboutView(LoginRequiredMixin, ClienteRequiredMixin, TemplateView):
+    template_name = 'appcliente/about.html'
     
 
-class DadosMembroUpdateView(LoginRequiredMixin, MembroRequiredMixin ,UpdateView):
+class DadosClienteUpdateView(LoginRequiredMixin, ClienteRequiredMixin ,UpdateView):
     model = Usuario
-    template_name = 'appmembro/dados_membro_form.html'
-    form_class = MembroCreateForm  
+    template_name = 'appcliente/dados_cliente_form.html'
+    form_class = ClienteCreateForm  
     
-    success_url = 'appmembro_home'
+    success_url = 'appcliente_home'
 
     def get_object(self, queryset=None):
         return self.request.user

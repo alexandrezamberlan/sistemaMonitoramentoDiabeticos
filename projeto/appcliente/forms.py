@@ -3,7 +3,7 @@ from django import forms
 from usuario.models import Usuario
 
 
-class MembroCreateForm(forms.ModelForm):
+class ClienteCreateForm(forms.ModelForm):
     nome = forms.CharField(label='Nome completo *', help_text='* Campos obrigatórios',required=True)
     
     instituicao = forms.CharField(label='Instituição a que pertence *', help_text='Registre a instituição, ou universidade, ou empresa',required=True)

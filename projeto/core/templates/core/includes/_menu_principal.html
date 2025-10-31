@@ -29,15 +29,12 @@
                     <ul class="dropdown-menu">
                         <li><a href="">Dados pessoais</a></li>
                         <li><a href="">Dados clínicos</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="">Meus medicamentos</a></li>
-                        <li role="separator" class="divider"></li>
+                        <li role="separator" class="divider"></li>                        
                         <li><a href="">Minhas refeições</a></li>
-                        <li><a href="">Minhas atividades físicas</a></li>
-                        <li><a href="">Minhas glicemias</a></li>
+                        <li><a href="">Minhas atividades físicas</a></li>                        
                     </ul>
                 </li>
-                {% if user.tipo == 'ADMINISTRADOR' or user.tipo == 'COORDENADOR' %}
+                {% if user.tipo == 'ADMINISTRADOR' or user.tipo == 'NUTRICIONISTA' %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false">{% bootstrap_icon 'cog' %} Gestão básica <span class="caret"></span></a>

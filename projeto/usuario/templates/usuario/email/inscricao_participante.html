@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block html %}
-    <p>Olá <strong>{{ inscricao.participante.nome }}</strong>!!<br><br>
+    <p>Olá <strong>{{ inscricao.cliente.nome }}</strong>!!<br><br>
 
         Sua inscrição foi realizada com sucesso no evento: {{ inscricao.evento.nome }}.<br>
         <b>Data do evento:</b> {{ inscricao.evento.data_inicio|date:"d/m/Y" }}<br>

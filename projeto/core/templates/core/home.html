@@ -11,12 +11,12 @@
 
 {% if user.is_authenticated %}
       <div class="container-fluid">
-            {% if request.user.tipo == 'COORDENADOR' %}
+            {% if request.user.tipo == 'NUTRICIONISTA' %}
                   <div class="row">
                         <div class="col-md-12">
                               <!-- Conteúdo da primeira coluna -->
                               <div class="panel panel-default">
-                                    <div class="panel-heading"><b>Atenção coordenador!!</b></div>
+                                    <div class="panel-heading"><b>Atenção NUTRICIONISTA!!</b></div>
                                     <div class="panel-body">
                                           <b>Eventos sob SUA coordenação: <small class="badge badge-info">{{ request.user.total_eventos_coordenados }}</b></small><br>
                                           <b>Eventos ATIVOS sob SUA coordenação: <small class="badge badge-info">{{ request.user.total_eventos_coordenados_ativos }}</b></small><br>

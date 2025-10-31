@@ -1,4 +1,4 @@
-{% extends 'appmembro/bootstrap.html' %}
+{% extends 'appcliente/bootstrap.html' %}
 {% load static %}
 
 {% load bootstrap3 %}
@@ -15,9 +15,9 @@
 </head>
 
 {% block bootstrap3_content %}
-    {% if user.tipo == 'PARTICIPANTE' %}
-        {% include 'appmembro/includes/_menu_principal.html' %}
-    {% elif user.tipo == 'COORDENADOR' or user.tipo == 'ADMINISTRADOR' or user.tipo == 'MINISTRANTE'%}
+    {% if user.tipo == 'CLIENTE' %}
+        {% include 'appcliente/includes/_menu_principal.html' %}
+    {% elif user.tipo == 'NUTRICIONISTA' or user.tipo == 'ADMINISTRADOR' or user.tipo == 'MEDICO'%}
         {% include 'core/includes/_menu_principal.html' %}
     {% endif %}
     

@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     
-    path('participante/', include('appmembro.urls')), 
+    path('cliente/', include('appcliente.urls')), 
     
     path('alimento/', include('alimento.urls')), 
     path('aviso/', include('aviso.urls')), 
