@@ -14,6 +14,7 @@ class Relatorio(models.Model):
     resposta = models.TextField('Respostas do relatório', null=True, blank=True)
     data = models.DateField('Data de geração do relatório *', default=datetime.now)
     # responsavel import de Usuario
+    # responsavel = models.ForeignKey(usuario.Usuario,)
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
@@ -29,6 +30,7 @@ class Relatorio(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = gerar_hash()
+        
         self.titulo = self.titulo.upper()
         
         super(Relatorio, self).save(*args, **kwargs)

@@ -5,6 +5,9 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from django.db.models import Q
+
+from .forms import BuscaRelatorioForm
 from utils.decorators import LoginRequiredMixin
 
 from .models import Relatorio
@@ -13,6 +16,21 @@ from .conecta_llm import Conecta
 
 class RelatorioListView(LoginRequiredMixin, ListView):
     model = Relatorio
+    template_name = 'relatorio/relatorio_list.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        form = BuscaRelatorioForm(data=self.request.GET)
+        if form.is_valid():
+            pesquisa = form.cleaned_data.get('pesquisa')
+            if pesquisa:
+                qs = qs.filter(titulo__icontains=pesquisa)  
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = BuscaRelatorioForm(self.request.GET or None)  
+        return context
 
 
 class RelatorioCreateView(LoginRequiredMixin, CreateView):

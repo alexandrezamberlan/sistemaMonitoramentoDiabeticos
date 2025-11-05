@@ -8,7 +8,22 @@
 {% block content %}
 	<div class="panel panel-default">
 	  <div class="panel-body">
-	    <a href="{% url 'relatorio_create' %}" class="btn btn-md btn-primary">{% bootstrap_icon 'floppy-disk' %} Gerar relatório</a>
+		<form class="form">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				{% bootstrap_field form.pesquisa  %}
+			</div>	
+			<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+				<br>
+				<button type="submit" class="btn btn-success btn-md"  style="width: 100%;">{% bootstrap_icon 'search' %} Buscar</button>
+			</div>			
+			<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+				<br>
+				<a href="{% url 'relatorio_create' %}" class="btn btn-md btn-primary" style="width: 100%;">{% bootstrap_icon 'floppy-disk' %} Gerar relatório</a>
+			</div>			
+		</div>
+	</form>
+	   
 	  </div>
 	</div>
 	<div class="table-responsive">
