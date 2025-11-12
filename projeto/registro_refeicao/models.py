@@ -15,7 +15,7 @@ class RegistroRefeicao(models.Model):
     total_carboidratos = models.PositiveIntegerField('Total de carboidratos (g)', null=True, blank=True, help_text='Total de carboidratos consumidos na refeição, se conhecido')
     total_calorias = models.PositiveIntegerField('Total de calorias (kcal)', null=True, blank=True, help_text='Total de calorias consumidas na refeição, se conhecido')
     data_hora_registro = models.DateTimeField('Data e hora do registro', auto_now=True)
-    
+    quantidade_tokens_consumidos = models.IntegerField('Quantidade de tokens utilizados *', null=True, blank=True, default=0)
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
@@ -41,14 +41,19 @@ class RegistroRefeicao(models.Model):
         descricao_alimentacao = self.registro_alimentacao
         
         contexto_json = Conecta.montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_meta, glicemia_atual, descricao_alimentacao)
+        total_tokens = 0
+        resposta_json, total_tokens = Conecta.gerar_recomendacoes(contexto_json)
         
-        resposta_json = Conecta.gera_recomendacoes(contexto_json)
+        # print("RESPOSTA JSON:", resposta_json)
+        # print("TOTAL TOKENS:", total_tokens)
+        
         lista_alimentos = []
         lista_alimentos, carboidratos, calorias, qtd_insulina, nome_insulina = Conecta.desmontar_json(resposta_json)
         self.total_carboidratos = int(carboidratos)
         self.total_calorias = int(calorias)
         self.quantidade_insulina_recomendada = int(qtd_insulina)
         self.nome_insulina = nome_insulina
+        self.quantidade_tokens_consumidos = int(total_tokens)
 
         super(RegistroRefeicao, self).save(*args, **kwargs)
 

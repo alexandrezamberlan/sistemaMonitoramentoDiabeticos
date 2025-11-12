@@ -32,6 +32,7 @@
 				<th>Cliente</th>
 				<th>Registro Alimentação</th>
 				<th>Recomendações</th>
+				<th class="text-center">Tokens consumidos</th>
 				<th class="text-center">Editar</th>
 				<th class="text-center">Excluir</th>
 			</thead>
@@ -66,7 +67,9 @@
 							{% endif %}
 							<br>
 							<small class="text-muted">{{ refeicao.data_hora_registro|date:"d/m/Y H:i" }}</small>
-							
+						</td>
+						<td class="text-center">
+							{{ refeicao.quantidade_tokens_consumidos|default:"0" }}
 						</td>
 						<td class="text-center">
 							{% bootstrap_button content='' href=refeicao.get_absolute_url button_type='link' icon='edit' button_class='btn btn-primary' size='sm' %}

@@ -44,13 +44,9 @@ class Conecta:
             return False
 
     @staticmethod
-    def conecta_api(): #conecta com api gemini
+    def conectar_api(): #conecta com api gemini
         # Configura o Gemini API
         try:
-            # Verifica se houve alteração pelo migrations
-            if Conecta.houve_alteracao_banco():
-                Conecta.atualiza_contexto()
-
             # Configura a chave da API do Gemini
             try:
                 api_key = config('GEMINI_API_KEY')
@@ -80,7 +76,7 @@ class Conecta:
             return f"Erro ao atualizar contexto. Exceção: {str(e)}"
 
     @staticmethod
-    def carrega_schema():
+    def carrega_schema_json():
         # Carrega o esquema do banco de dados do arquivo schema.json
         try:
             schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.json')
@@ -91,16 +87,33 @@ class Conecta:
         except Exception as e:
             print(f"Erro ao carregar schema: {str(e)}")
             return None
+        
+    @staticmethod
+    def carrega_schema_toon():
+        # Carrega o esquema do banco de dados do arquivo schema.toon
+        try:
+            schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.toon')
+
+            with open(schema_path, "r", encoding='utf-8') as file:
+                schema_string = file.read()
+                return schema_string
+        except Exception as e:
+            print(f"Erro ao carregar schema: {str(e)}")
+            return None
 
     @staticmethod
     def gera_sql(pergunta):
         try:
-            model = Conecta.conecta_api()# conecta com gemini api
+            model = Conecta.conectar_api()# conecta com gemini api
             if isinstance(model, str):  # Se retornou erro
                 return model
+            
+            # # Verifica se houve alteração pelo migrations
+            # if Conecta.houve_alteracao_banco():
+            #     Conecta.atualiza_contexto()
 
             # Carrega o schema do banco de dados
-            schema_data = Conecta.carrega_schema()
+            schema_data = Conecta.carrega_schema_toon()
             if not schema_data:
                 return "Erro ao carregar o esquema do banco de dados."
 
@@ -115,11 +128,12 @@ class Conecta:
             1. Retorne APENAS UMA instrução SELECT válida
             2. NÃO use ponto e vírgula (;)
             3. FAÇA SOMENTE SELEÇÃO de dados (SELECT). NÃO use INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, EXEC, MERGE ou TRUNCATE
-            4. Para buscar por nome use: WHERE nome LIKE '%parte_do_nome%'
+            4. Para buscar por nome ou campos descritivos use: WHERE campo LIKE '%parte_do_texto%'
             5. SEMPRE selecione campos completos (ex: u.nome, não SUBSTRING ou similar)
             6. NÃO use funções que dividem strings em caracteres
             7. Máximo 5 colunas no SELECT
             8. Ignore campos padroes do django
+            9. Trate dados com letras maiusculas e minusculas igualmente (case insensitive)
 
             PERGUNTA: {pergunta}
 

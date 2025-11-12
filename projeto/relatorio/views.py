@@ -44,10 +44,7 @@ class RelatorioCreateView(LoginRequiredMixin, CreateView):
     
     def form_valid(self, form):
         relatorio = form.save()
-
-        # aplicar conexao pandas - trabalho Pedro
-        #relatorio.resposta = Conecta.gera_dataframe()
-        
+         
         # aplicar conexao gemini api - llm
         relatorio.script_sql = Conecta.gera_sql(relatorio.descricao)
         
@@ -69,12 +66,10 @@ class RelatorioUpdateView(LoginRequiredMixin, UpdateView):
     
     def form_valid(self, form):
         relatorio = form.save()
-        
-        # aplicar conexao pandas - trabalho Pedro
-        #relatorio.resposta = Conecta.gera_dataframe()
-        
+         
         # aplicar conexao rpc - llm - trabalho Luiz
         relatorio.script_sql = Conecta.gera_sql(relatorio.descricao)
+        
         # aplicar script sql
         relatorio.resposta = Conecta.executa_sql(relatorio.script_sql)
         

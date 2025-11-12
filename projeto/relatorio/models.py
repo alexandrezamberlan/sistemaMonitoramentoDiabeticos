@@ -13,8 +13,7 @@ class Relatorio(models.Model):
     script_sql = models.TextField('Script SQL', null=True, blank=True)
     resposta = models.TextField('Respostas do relatório', null=True, blank=True)
     data = models.DateField('Data de geração do relatório *', default=datetime.now)
-    # responsavel import de Usuario
-    # responsavel = models.ForeignKey(usuario.Usuario,)
+    quantidade_tokens_consumidos = models.IntegerField('Quantidade de tokens utilizados *', null=True, blank=True, default=0)
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
