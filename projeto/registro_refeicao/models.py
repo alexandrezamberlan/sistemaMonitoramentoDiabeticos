@@ -15,7 +15,7 @@ class RegistroRefeicao(models.Model):
     total_carboidratos = models.PositiveIntegerField('Total de carboidratos (g)', null=True, blank=True, help_text='Total de carboidratos consumidos na refeição, se conhecido')
     total_calorias = models.PositiveIntegerField('Total de calorias (kcal)', null=True, blank=True, help_text='Total de calorias consumidas na refeição, se conhecido')
     data_hora_registro = models.DateTimeField('Data e hora do registro', auto_now=True)
-    quantidade_tokens_consumidos = models.IntegerField('Quantidade de tokens utilizados *', null=True, blank=True, default=0)
+    quantidade_tokens_consumidos = models.PositiveIntegerField('Quantidade de tokens utilizados *', null=True, blank=True, default=0)
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
