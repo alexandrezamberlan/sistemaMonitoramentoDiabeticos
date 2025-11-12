@@ -92,6 +92,12 @@
         - nome referência
         - is_active
         - slug
+     
+    - appcliente
+        - (OK) meus dados pessoais
+        - (OK) meus dados clínicos
+        - minhas refeições (Henriques e Scher)
+        - minhas atividades físicas (Alexandre)
 
 ## Sugestões de CSS
     - https://bootswatch.com/3/
