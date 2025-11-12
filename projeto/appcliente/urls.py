@@ -8,6 +8,8 @@ from .views import (DadosClienteUpdateView, HomeView, AboutView)
 from .views import (MeusDadosClinicosClienteListView, MeusDadosClinicosClienteCreateView,
                     MeusDadosClinicosClienteUpdateView, MeusDadosClinicosClienteDeleteView)
 
+from .views import (MeuRegistroAtividadeListView, MeuRegistroAtividadeCreateView,
+                    MeuRegistroAtividadeUpdateView, MeuRegistroAtividadeDeleteView)
 
 urlpatterns = [
    path('home', HomeView.as_view(), name='appcliente_home'), 
@@ -21,5 +23,9 @@ urlpatterns = [
    path('meus-dados-clinicos-update/<slug:slug>/', MeusDadosClinicosClienteUpdateView.as_view(), name='appcliente_dadoclinico_update'),
    path('meus-dados-clinicos-delete/<slug:slug>/', MeusDadosClinicosClienteDeleteView.as_view(), name='appcliente_dadoclinico_delete'),
    
+   path('minhas-atividades-list/', MeuRegistroAtividadeListView.as_view(), name='appcliente_registroatividade_list'),
+   path('minhas-atividades-cad/', MeuRegistroAtividadeCreateView.as_view(), name='appcliente_registroatividade_create'),
+   path('minhas-atividades-update/<slug:slug>/', MeuRegistroAtividadeUpdateView.as_view(), name='appcliente_registroatividade_update'),
+   path('minhas-atividades-delete/<slug:slug>/', MeuRegistroAtividadeDeleteView.as_view(), name='appcliente_registroatividade_delete'),
    
 ]

@@ -49,3 +49,7 @@ class RegistroAtividade(models.Model):
     @property
     def get_delete_url(self):
         return reverse('registroatividade_delete', kwargs={'slug': self.slug})
+
+    @property
+    def get_absolute_cliente_url(self):
+        return reverse('appcliente_registroatividade_update', kwargs={'slug': self.slug})

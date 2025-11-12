@@ -20,10 +20,12 @@ from utils.decorators import LoginRequiredMixin, ClienteRequiredMixin
 
 from aviso.models import Aviso
 from dado_clinico.models import DadoClinico
+from registro_atividade.models import RegistroAtividade
 from usuario.models import Usuario
 
 from .forms import ClienteCreateForm, DadoClinicoClienteForm
 from dado_clinico.forms import BuscaDadoClinicoForm
+from registro_atividade.forms import BuscaRegistroAtividadeForm
 
 
 
@@ -112,7 +114,6 @@ class MeusDadosClinicosClienteUpdateView(LoginRequiredMixin, UpdateView):
     form_class = DadoClinicoClienteForm
     success_url = 'appcliente_dadoclinico_list'
     
-
     def get_success_url(self):
         messages.success(self.request, 'Dado clínico atualizado com sucesso na plataforma!')
         return reverse(self.success_url)
@@ -138,3 +139,88 @@ class MeusDadosClinicosClienteDeleteView(LoginRequiredMixin, DeleteView):
         except Exception as e:
             messages.error(request, 'Há dependências ligadas à esse Dado Clínico, permissão negada!')
         return redirect(self.success_url)
+
+
+#Registro Atividade Cliente Views
+class MeuRegistroAtividadeListView(LoginRequiredMixin, ListView):
+    model = RegistroAtividade
+    template_name = 'appcliente/registroatividade_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.GET:
+            #quando ja tem dados filtrando
+            context['form'] = BuscaRegistroAtividadeForm(data=self.request.GET)
+        else:
+            #quando acessa sem dados filtrando
+            context['form'] = BuscaRegistroAtividadeForm()
+        return context
+
+    def get_queryset(self):                        
+        qs = super().get_queryset().filter(cliente=self.request.user)
+
+        if self.request.GET:
+            #quando ja tem dados filtrando
+            form = BuscaRegistroAtividadeForm(data=self.request.GET)
+        else:
+            #quando acessa sem dados filtrando
+            form = BuscaRegistroAtividadeForm()
+
+        if form.is_valid():            
+            pesquisa = form.cleaned_data.get('pesquisa')            
+                        
+            if pesquisa:
+                qs = qs.filter(Q(cliente__nome__icontains=pesquisa) | Q(atividade__nome__icontains=pesquisa))
+            
+        return qs
+
+
+class MeuRegistroAtividadeCreateView(LoginRequiredMixin, CreateView):
+    model = RegistroAtividade
+    fields = ['data', 'hora', 'atividade', 'duracao', 'esforco', 'frequencia_cardiaca_media']
+    template_name = 'appcliente/registroatividade_form.html'
+    success_url = 'appcliente_registroatividade_list'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Registro de atividade cadastrado com sucesso na plataforma!')
+        return reverse(self.success_url)
+    
+    def form_valid(self, form):        
+        formulario = form.save(commit=False)
+        formulario.cliente = self.request.user
+        formulario.save()
+        
+        return super().form_valid(form)
+
+
+class MeuRegistroAtividadeUpdateView(LoginRequiredMixin, UpdateView):
+    model = RegistroAtividade
+    fields = ['data', 'hora', 'atividade', 'duracao', 'esforco', 'frequencia_cardiaca_media']
+    template_name = 'appcliente/registroatividade_form.html'
+    success_url = 'appcliente_registroatividade_list'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Registro de atividade atualizado com sucesso na plataforma!')
+        return reverse(self.success_url)
+
+
+class MeuRegistroAtividadeDeleteView(LoginRequiredMixin, DeleteView):
+    model = RegistroAtividade
+    success_url = 'appcliente_registroatividade_list'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Registro de atividade removido com sucesso na plataforma!')
+        return reverse(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL. If the object is protected, send an error message.
+        """
+        self.object = self.get_object()
+        try:
+            self.object.delete()
+        except Exception as e:
+            messages.error(request, 'Há dependências ligadas à esse Exercício, permissão negada!')
+        return redirect(self.get_success_url())
+    
