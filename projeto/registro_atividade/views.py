@@ -74,7 +74,7 @@ class RegistroAtividadeDeleteView(LoginRequiredMixin, DeleteView):
         messages.success(self.request, 'Registro de atividade removido com sucesso na plataforma!')
         return reverse(self.success_url)
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         """
         Call the delete() method on the fetched object and then redirect to the
         success URL. If the object is protected, send an error message.

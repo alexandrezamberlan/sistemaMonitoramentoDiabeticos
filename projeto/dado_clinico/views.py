@@ -41,7 +41,7 @@ class DadoClinicoListView(LoginRequiredMixin, ListView):
             pesquisa = form.cleaned_data.get('pesquisa')            
                         
             if pesquisa:
-                qs = qs.filter(Q(cliente__nome__icontains=pesquisa) | Q(medicamento__nome_comercial__icontains=pesquisa) | Q(medicamento__principio_ativo__icontains=pesquisa) | Q(medicamento__classe_terapeutica__icontains=pesquisa) )
+                qs = qs.filter(Q(cliente__nome__icontains=pesquisa) | Q(medicamentos__nome_comercial__icontains=pesquisa) | Q(medicamentos__principio_ativo__icontains=pesquisa) | Q(medicamentos__classe_terapeutica__icontains=pesquisa) )
             
         return qs
 

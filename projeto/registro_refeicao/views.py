@@ -41,7 +41,7 @@ class RegistroRefeicaoListView(LoginRequiredMixin, ListView):
             pesquisa = form.cleaned_data.get('pesquisa')            
                         
             if pesquisa:
-                qs = qs.filter(Q(cliente__nome__icontains=pesquisa) | Q(registro_alimentacao__icontains=pesquisa))
+                qs = qs.filter(Q(cliente__cliente__nome__icontains=pesquisa) | Q(registro_alimentacao__icontains=pesquisa))
             
         return qs
 
@@ -76,7 +76,7 @@ class RegistroRefeicaoDeleteView(LoginRequiredMixin, DeleteView):
         messages.success(self.request, 'Registro de refeição removido com sucesso na plataforma!')
         return reverse(self.success_url)
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         """
         Call the delete() method on the fetched object and then redirect to the
         success URL. If the object is protected, send an error message.

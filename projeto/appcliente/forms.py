@@ -1,5 +1,7 @@
 from django import forms
 
+from dado_clinico.models import DadoClinico
+from medicamento.models import Medicamento
 from usuario.models import Usuario
 
 
@@ -15,3 +17,12 @@ class ClienteCreateForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ['nome','instituicao', 'email', 'celular', 'cpf']
+
+
+
+class DadoClinicoClienteForm(forms.ModelForm):    
+    medicamentos = forms.ModelMultipleChoiceField(label='Medicamentos', queryset=Medicamento.medicamentos_ativos.all(), required=False, widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = DadoClinico
+        fields = ['tipo_diabetes', 'medicamentos', 'glicemia_meta', 'bolus_alimentar', 'bolus_correcao', 'altura', 'peso']

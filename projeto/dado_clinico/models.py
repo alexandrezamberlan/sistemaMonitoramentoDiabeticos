@@ -70,7 +70,7 @@ class DadoClinico(models.Model):
     peso = models.PositiveIntegerField('Peso (kg)', null=True, blank=True)
     data_registro = models.DateField('Data do registro', auto_now=True)
 
-    is_active = models.BooleanField('Ativo', default=False, help_text='Se ativo, o dado pode ser utilizado no sistema')
+    is_active = models.BooleanField('Ativo', default=True, help_text='Se ativo, o dado pode ser utilizado no sistema')
     slug = models.SlugField('Hash',max_length= 200, null=True, blank=True)
 
     objects = models.Manager()
@@ -109,3 +109,12 @@ class DadoClinico(models.Model):
     @property
     def get_delete_url(self):
         return reverse('dadoclinico_delete', kwargs={'slug': self.slug})
+
+
+    @property
+    def get_absolute_cliente_url(self):
+        return reverse('appcliente_dadoclinico_update', kwargs={'slug': self.slug})
+
+    @property
+    def get_delete_cliente_url(self):
+        return reverse('appcliente_dadoclinico_delete', kwargs={'slug': self.slug})
