@@ -44,16 +44,15 @@ class RegistroRefeicao(models.Model):
         total_tokens = 0
         resposta_json, total_tokens = Conecta.gerar_recomendacoes(contexto_json)
         
-        # print("RESPOSTA JSON:", resposta_json)
-        # print("TOTAL TOKENS:", total_tokens)
-        
         lista_alimentos = []
         lista_alimentos, carboidratos, calorias, qtd_insulina, nome_insulina = Conecta.desmontar_json(resposta_json)
         self.total_carboidratos = int(carboidratos)
         self.total_calorias = int(calorias)
         self.quantidade_insulina_recomendada = int(qtd_insulina)
         self.nome_insulina = nome_insulina
-        self.quantidade_tokens_consumidos = int(total_tokens)
+        
+        tokens_string = str(total_tokens).split(' ')
+        self.quantidade_tokens_consumidos = int(tokens_string[1]) if len(tokens_string) > 1 else 0
 
         super(RegistroRefeicao, self).save(*args, **kwargs)
 
