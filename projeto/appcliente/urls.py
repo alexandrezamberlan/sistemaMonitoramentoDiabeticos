@@ -8,6 +8,8 @@ from .views import (DadosClienteUpdateView, HomeView, AboutView)
 from .views import (MeusDadosClinicosClienteListView, MeusDadosClinicosClienteCreateView,
                     MeusDadosClinicosClienteUpdateView, MeusDadosClinicosClienteDeleteView)
 
+from .views import (MinhaRefeicaoListView, MinhaRefeicaoCreateView, MinhaRefeicaoDeleteView)
+
 from .views import (MeuRegistroAtividadeListView, MeuRegistroAtividadeCreateView,
                     MeuRegistroAtividadeUpdateView, MeuRegistroAtividadeDeleteView)
 
@@ -22,6 +24,11 @@ urlpatterns = [
    path('meus-dados-clinicos-cad/', MeusDadosClinicosClienteCreateView.as_view(), name='appcliente_dadoclinico_create'),
    path('meus-dados-clinicos-update/<slug:slug>/', MeusDadosClinicosClienteUpdateView.as_view(), name='appcliente_dadoclinico_update'),
    path('meus-dados-clinicos-delete/<slug:slug>/', MeusDadosClinicosClienteDeleteView.as_view(), name='appcliente_dadoclinico_delete'),
+
+   path('minhas-refeicoes-list/', MinhaRefeicaoListView.as_view(), name='appcliente_registrorefeicao_list'),
+   path('minhas-refeicoes-cad/', MinhaRefeicaoCreateView.as_view(), name='appcliente_registrorefeicao_create'),
+   #path('minhas-refeicoes-update/<slug:slug>/', MinhaRefeicaoUpdateView.as_view(), name='appcliente_registrorefeicao_update'),
+   path('minhas-refeicoes-delete/<slug:slug>/', MinhaRefeicaoDeleteView.as_view(), name='appcliente_registrorefeicao_delete'),
    
    path('minhas-atividades-list/', MeuRegistroAtividadeListView.as_view(), name='appcliente_registroatividade_list'),
    path('minhas-atividades-cad/', MeuRegistroAtividadeCreateView.as_view(), name='appcliente_registroatividade_create'),

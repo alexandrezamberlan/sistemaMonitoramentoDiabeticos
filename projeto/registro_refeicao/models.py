@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from datetime import datetime
 from django.db import models
 from django.urls import reverse
 from .conecta_llm import Conecta
@@ -26,7 +26,9 @@ class RegistroRefeicao(models.Model):
         verbose_name_plural = 'registros refeições'
 
     def __str__(self):
-        return f'{self.data_hora_registro}: {self.registro_alimentacao}'
+        # Formatar a data e hora no formato desejado
+        formatted_date = self.data_hora_registro.strftime('%d/%m/%Y - %H:%M')
+        return f'{formatted_date}: {self.registro_alimentacao}'
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -63,3 +65,7 @@ class RegistroRefeicao(models.Model):
     @property
     def get_delete_url(self):
         return reverse('registrorefeicao_delete', kwargs={'slug': self.slug})
+    
+    @property
+    def get_delete_cliente_url(self):
+        return reverse('appcliente_registrorefeicao_delete', kwargs={'slug': self.slug})

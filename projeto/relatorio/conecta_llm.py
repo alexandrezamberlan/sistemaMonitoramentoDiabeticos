@@ -18,6 +18,9 @@ from django.conf import settings
 # from utils.extrai_esquemaBD import extrai_esquema_mysql
 
 class Conecta:
+    
+    todos_tokens = 0
+
     @staticmethod
     def houve_alteracao_banco():
         try:
@@ -58,6 +61,9 @@ class Conecta:
 
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel('gemini-2.5-flash')
+            tokens_lista = str(model.count_tokens(contents="Conexão inicial Gemini 2.5 Flash")).split(' ')
+            Conecta.todos_tokens += int(tokens_lista[1])
+            print("Conectado ao Gemini 2.5 Flash com sucesso.", f"Total tokens usados: {Conecta.todos_tokens}")
             return model
         except Exception as e:
             erro = f"Erro de conexão, contate o administrador. \nCódigo: {str(e)}"
@@ -139,8 +145,12 @@ class Conecta:
 
             SQL:
             """
-
+            
+            #total_tokens: 53
             response = model.generate_content(context_prompt)
+            tokens_lista = str(model.count_tokens(contents=context_prompt+response.text)).split(' ')
+            Conecta.todos_tokens += int (tokens_lista[1])
+            print("Conectado ao Gemini 2.5 Flash para aplicar consulta.", f"Total tokens usados: {Conecta.todos_tokens}")
             sql_resposta = response.text.strip()
 
             # Remove possíveis marcadores de código markdown
