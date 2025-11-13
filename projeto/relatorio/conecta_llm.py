@@ -64,7 +64,7 @@ class Conecta:
             return erro
 
     @staticmethod
-    def atualiza_contexto():
+    def atualizar_contexto():
         # Lê o arquivo schema.json para entender o banco de dados
         try:
             schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.json')
@@ -76,7 +76,7 @@ class Conecta:
             return f"Erro ao atualizar contexto. Exceção: {str(e)}"
 
     @staticmethod
-    def carrega_schema_json():
+    def carregar_schema_json():
         # Carrega o esquema do banco de dados do arquivo schema.json
         try:
             schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.json')
@@ -89,7 +89,7 @@ class Conecta:
             return None
         
     @staticmethod
-    def carrega_schema_toon():
+    def carregar_schema_toon():
         # Carrega o esquema do banco de dados do arquivo schema.toon
         try:
             schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.toon')
@@ -102,7 +102,7 @@ class Conecta:
             return None
 
     @staticmethod
-    def gera_sql(pergunta):
+    def gerar_sql(pergunta):
         try:
             model = Conecta.conectar_api()# conecta com gemini api
             if isinstance(model, str):  # Se retornou erro
@@ -110,10 +110,10 @@ class Conecta:
             
             # # Verifica se houve alteração pelo migrations
             # if Conecta.houve_alteracao_banco():
-            #     Conecta.atualiza_contexto()
+            #     Conecta.atualizar_contexto()
 
             # Carrega o schema do banco de dados
-            schema_data = Conecta.carrega_schema_toon()
+            schema_data = Conecta.carregar_schema_toon()
             if not schema_data:
                 return "Erro ao carregar o esquema do banco de dados."
 
@@ -166,7 +166,7 @@ class Conecta:
             return erro
 
     @staticmethod
-    def checa_consulta_segura(sql): #NAO ALTERAR, REUTILIZAR
+    def checar_consulta_segura(sql): #NAO ALTERAR, REUTILIZAR
         sql = sql.strip().lower()
 
         # Primeiro, verifica se a consulta começa com SELECT ou WITH
@@ -188,10 +188,10 @@ class Conecta:
         return True
 
     @staticmethod
-    def executa_sql(sql): #NAO ALTERAR, REUTILIZAR
+    def executar_sql(sql): #NAO ALTERAR, REUTILIZAR
         try:
             # Verifica se a consulta é segura
-            if not Conecta.checa_consulta_segura(sql):
+            if not Conecta.checar_consulta_segura(sql):
                 return "Uma consulta potencialmente insegura foi detectada. Por favor, tente novamente."
 
             # Conecta no banco com cursor e obtém os resultados
@@ -224,19 +224,19 @@ class Conecta:
                 lista_dados = resultados
 
             # Filtra os resultados
-            lista_filtrada = Conecta.filtra_resultados(lista_dados, nomes_campos)
+            lista_filtrada = Conecta.filtrar_resultados(lista_dados, nomes_campos)
 
             if lista_filtrada == 'Erro':
                 raise Exception("Mais de 5 colunas retornadas. Por favor, refine sua consulta.")
 
             # Gera a tabela HTML com os resultados filtrados
-            return Conecta.gera_tabela_html(nomes_campos, lista_filtrada)
+            return Conecta.gerar_tabela_html(nomes_campos, lista_filtrada)
 
         except Exception as e:
             return f"Erro na execução da consulta. Erro: {str(e)}. Dúvida, contate o administrador!"
 
     @staticmethod
-    def filtra_resultados(resultados, nomes_campos):
+    def filtrar_resultados(resultados, nomes_campos):
         # Filtra campos indesejados
         campos_indesejados = {'SLUG', 'PASSWORD', 'ARQUIVO_PROJETO'}
         indices_validos = [i for i, nome in enumerate(nomes_campos) if nome not in campos_indesejados]
@@ -260,7 +260,7 @@ class Conecta:
         return lista_dados
 
     @staticmethod
-    def gera_tabela_html(nomes_campos, lista_dados):
+    def gerar_tabela_html(nomes_campos, lista_dados):
         template_str = """
                         <h2 style="text-align:center;">Tabela de Resposta</h2>
                         <table class="table table-hover">

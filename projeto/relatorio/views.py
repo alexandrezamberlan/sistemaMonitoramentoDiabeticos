@@ -46,10 +46,10 @@ class RelatorioCreateView(LoginRequiredMixin, CreateView):
         relatorio = form.save()
          
         # aplicar conexao gemini api - llm
-        relatorio.script_sql = Conecta.gera_sql(relatorio.descricao)
+        relatorio.script_sql = Conecta.gerar_sql(relatorio.descricao)
         
         # aplicar script sql
-        relatorio.resposta = Conecta.executa_sql(relatorio.script_sql)
+        relatorio.resposta = Conecta.executar_sql(relatorio.script_sql)
         
         relatorio.save()
         return super(RelatorioCreateView, self).form_valid(form)
@@ -68,10 +68,10 @@ class RelatorioUpdateView(LoginRequiredMixin, UpdateView):
         relatorio = form.save()
          
         # aplicar conexao rpc - llm - trabalho Luiz
-        relatorio.script_sql = Conecta.gera_sql(relatorio.descricao)
+        relatorio.script_sql = Conecta.gerar_sql(relatorio.descricao)
         
         # aplicar script sql
-        relatorio.resposta = Conecta.executa_sql(relatorio.script_sql)
+        relatorio.resposta = Conecta.executar_sql(relatorio.script_sql)
         
         relatorio.save()
         return super(RelatorioUpdateView, self).form_valid(form)
