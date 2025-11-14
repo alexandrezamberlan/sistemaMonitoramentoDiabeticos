@@ -15,17 +15,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 
+
 from utils.decorators import LoginRequiredMixin, ClienteRequiredMixin
 
 
 from aviso.models import Aviso
 from dado_clinico.models import DadoClinico
+from registro_refeicao.models import RegistroRefeicao
 from registro_atividade.models import RegistroAtividade
 from usuario.models import Usuario
 
-from .forms import ClienteCreateForm, DadoClinicoClienteForm
+from .forms import ClienteCreateForm, DadoClinicoClienteForm, ClienteRegistroRefeicaoForm
 from dado_clinico.forms import BuscaDadoClinicoForm
 from registro_atividade.forms import BuscaRegistroAtividadeForm
+from registro_refeicao.forms import BuscaRegistroRefeicaoForm
 
 
 
@@ -139,6 +142,83 @@ class MeusDadosClinicosClienteDeleteView(LoginRequiredMixin, DeleteView):
         except Exception as e:
             messages.error(request, 'Há dependências ligadas à esse Dado Clínico, permissão negada!')
         return redirect(self.success_url)
+    
+#Refeicao Cliente Views
+class MinhaRefeicaoListView(LoginRequiredMixin, ListView):
+    model = RegistroRefeicao
+    template_name = 'appcliente/registrorefeicao_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.GET:
+            #quando ja tem dados filtrando
+            context['form'] = BuscaRegistroRefeicaoForm(data=self.request.GET)
+        else:
+            #quando acessa sem dados filtrando
+            context['form'] = BuscaRegistroRefeicaoForm()
+        return context
+
+    def get_queryset(self):                
+        qs = super().get_queryset().filter(cliente__cliente=self.request.user)
+
+        if self.request.GET:
+            #quando ja tem dados filtrando
+            form = BuscaRegistroRefeicaoForm(data=self.request.GET)
+        else:
+            #quando acessa sem dados filtrando
+            form = BuscaRegistroRefeicaoForm()
+
+        if form.is_valid():            
+            pesquisa = form.cleaned_data.get('pesquisa')            
+                        
+            if pesquisa:
+                qs = qs.filter(Q(cliente__cliente__nome__icontains=pesquisa) | Q(registro_alimentacao__icontains=pesquisa))
+            
+        return qs
+
+class MinhaRefeicaoCreateView(LoginRequiredMixin, CreateView):
+    model = RegistroRefeicao
+    fields = ['registro_alimentacao', 'glicemia_vigente']    
+    template_name = 'appcliente/registrorefeicao_form.html'
+    success_url = 'appcliente_registrorefeicao_list'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Registro de refeição cadastrado com sucesso na plataforma!')
+        return reverse(self.success_url)
+
+
+# class RegistroRefeicaoUpdateView(LoginRequiredMixin, UpdateView):
+#     model = RegistroRefeicao
+#     # fields = ['cliente', 'registro_alimentacao', 'glicemia_vigente']
+#     form_class = RegistroRefeicaoForm
+#     success_url = 'registrorefeicao_list'
+
+#     def get_success_url(self):
+#         messages.success(self.request, 'Registro de refeição atualizado com sucesso na plataforma!')
+#         return reverse(self.success_url)
+
+
+class MinhaRefeicaoDeleteView(LoginRequiredMixin, DeleteView):
+    model = RegistroRefeicao
+    template_name = 'appcliente/registrorefeicao_confirm_delete.html'
+    success_url = 'appcliente_registrorefeicao_list'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Registro de refeição removido com sucesso na plataforma!')
+        return reverse(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL. If the object is protected, send an error message.
+        """
+        self.object = self.get_object()
+        try:
+            self.object.delete()
+        except Exception as e:
+            messages.error(request, 'Há dependências ligadas à esse Registro de refeição, permissão negada!')
+        return redirect(self.get_success_url())
+
 
 
 #Registro Atividade Cliente Views
