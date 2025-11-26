@@ -1,31 +1,6 @@
-# import { OpenRouter } from '@openrouter/sdk';
-
-# const openRouter = new OpenRouter({
-#   apiKey: '<OPENROUTER_API_KEY>',
-#   defaultHeaders: {
-#     'HTTP-Referer': '<YOUR_SITE_URL>', // Optional. Site URL for rankings on openrouter.ai.
-#     'X-Title': '<YOUR_SITE_NAME>', // Optional. Site title for rankings on openrouter.ai.
-#   },
-# });
-
-# const completion = await openRouter.chat.send({
-#   model: 'openai/gpt-4o',
-#   messages: [
-#     {
-#       role: 'user',
-#       content: 'What is the meaning of life?',
-#     },
-#   ],
-#   stream: false,
-# });
-
-# console.log(completion.choices[0].message.content);
-
 import datetime
 import os
-import re
 import json
-import sqlite3
 
 import google.generativeai as genai
 
@@ -35,85 +10,25 @@ from django.db import connection
 from django.db import connections
 from django.template import Template, Context
 from django.db.migrations.executor import MigrationExecutor
-from django.conf import settings
 
 
 class Conecta:
-    @staticmethod
-    def montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_meta, glicemia_atual, descricao_alimentacao):
-        """
-        Monta um JSON com as informações fornecidas.
-        """
-        contexto = {
-            "medicamentos": medicamentos,
-            "tipo_diabetes": tipo_diabetes, 
-            "bolus_alimentar": bolus_alimentar,
-            "bolus_correcao": bolus_correcao,
-            "glicemia_meta": glicemia_meta,
-            "glicemia_atual": glicemia_atual,
-            "descricao_alimentacao": descricao_alimentacao
-        }
-        return json.dumps(contexto, indent=4)
-    
-    
-    @staticmethod
-    def desmontar_json(resposta_json):
-        """
-        Desmonta o JSON da resposta e retorna os valores.
-        """
-        data = json.loads(resposta_json)
-        lista_alimentos = data.get("lista_alimentos", [])
-        calorias = data.get("total_calorias")
-        carboidratos = data.get("total_carboidratos")
-        qtd_insulina = data.get("quantidade_insulina_recomendada")
-        nome_insulina = data.get("nome_insulina", "")
-
-        return lista_alimentos, carboidratos, calorias, qtd_insulina, nome_insulina
-
+    todos_tokens = 0
 
     @staticmethod
-    def gerar_recomendacoes(contexto_json):
+    def testar_conexao(model):
         try:
-            client = Conecta.conectar_api()# conecta com gemini api
-            if isinstance(client, str):  # Se retornou erro
-                return client
-
-            # Define the expected role for the AI - Optimized for conciseness
-            papel_esperado_ia = "Nutricionista especializada em contagem de carboidratos, calorias e cálculo de insulina."
-
-            # Define the expected response format from the AI - Optimized for conciseness
-            resposta_desejada = "Retorne SOMENTE um JSON com um único objeto com o nome dos alimentos, quantidade de carboidrato, quantidade de caloria, quantidade de insulina necessária e o nome da insulina a ser utilizada."
-
-            exemplo_json = '{"lista_alimentos": "", "total_carboidratos": , "total_calorias": , "quantidade_insulina_recomendada": , "nome_insulina": ""}'
-
-            # Construct the prompt using f-strings for clarity and efficiency
-            # The context_json is included here, and its size will impact token usage
-            prompt = f"""
-            Papel: {papel_esperado_ia}
-
-            Contexto: {contexto_json}
-
-            Resposta: {resposta_desejada}
-            
-            Exemplo de JSON esperado: {exemplo_json}
-            """
-
-            response = client.generate_content(prompt)
-
-            # Extract and clean the JSON part from the response
-            resposta_json = response.candidates[0].content.parts[0].text.strip().strip('```json').strip('```')
-            total_tokens = client.count_tokens(contents=prompt+resposta_json)
-
-            return resposta_json, total_tokens
-
+            resposta = model.generate_content("ping")
+            print("Status OK — respondeu ao ping.")
+            return True
         except Exception as e:
-            erro = f"Não foi possível conectar no servidor para gerar recomendações. Por favor, tente novamente mais tarde. Erro: {str(e)}"
-            return erro, 0
-        
+            print("Erro ao testar conexão:", e)
+            return False
+
     @staticmethod
-    def conectar_api(): #conecta com api gemini
+    def conectar_api():  # conecta com api gemini
         # Configura o Gemini API
-        try:            
+        try:
             # Configura a chave da API do Gemini
             try:
                 api_key = config('GEMINI_API_KEY')
@@ -121,18 +36,58 @@ class Conecta:
                 api_key = os.getenv('GEMINI_API_KEY')
 
             if not api_key:
-                raise Exception("Chave API do Google não encontrada. Configure GOOGLE_API_KEY nas variáveis de ambiente ou no .env")
+                raise Exception(
+                    "Chave API do Google não encontrada. Configure GOOGLE_API_KEY nas variáveis de ambiente ou no .env")
 
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel('gemini-2.5-flash')
-            # print("Conectado com sucesso ao Gemini API", model)
+            tokens_lista = str(model.count_tokens(contents="Conexão inicial Gemini 2.5 Flash")).split(' ')
+            Conecta.todos_tokens += int(tokens_lista[1])
+            # print("Conectado ao Gemini 2.5 Flash com sucesso.", f"Total tokens usados: {Conecta.todos_tokens}")
+
+            print('Testando conexão com API.......')
+            if model and not isinstance(model, str):
+                Conecta.testar_conexao(model)
+            else:
+                print('Nenhum modelo foi carregado após conexão com API')
             return model
+        except genai.types.BlockedPromptException:
+            return "Erro: Prompt bloqueado pela API."
+        except genai.types.RateLimitException:
+            return "Erro: Limite de requisições atingido (quota)."
+        except genai.types.APIConnectionException:
+            return "Erro: Falha de conexão com a API."
         except Exception as e:
-            erro = f"Erro de conexão, contate o administrador. \nCódigo: {str(e)}"
-            return erro
+            return f"Erro inesperado: {e}"
+
+    ####### PARTE DO ESPECIALISTA EM SQL #######
+    @staticmethod
+    def houve_alteracao_banco():
+        try:
+            connection = connections['default']
+            executor = MigrationExecutor(connection)
+
+            # Pega as migrações aplicadas e as pendentes
+            applied_migrations = executor.loader.applied_migrations
+            all_migrations = executor.loader.graph.nodes.keys()
+
+            # Diferença indica migrações pendentes
+            pending = set(all_migrations) - set(applied_migrations)
+
+            if pending:
+                print("Há migrações pendentes:")
+                for mig in pending:
+                    print(mig)
+                return True
+            else:
+                print("Todas as migrações estão aplicadas.")
+                return False
+        except Exception as e:
+            print('Erro', e)
+            return False
 
     @staticmethod
-    def atualizar_contexto():
+    def atualizar_contexto_json():
         # Lê o arquivo schema.json para entender o banco de dados
         try:
             schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.json')
@@ -144,7 +99,19 @@ class Conecta:
             return f"Erro ao atualizar contexto. Exceção: {str(e)}"
 
     @staticmethod
-    def carregar_schema():
+    def atualizar_contexto_toon():
+        # Lê o arquivo schema.json para entender o banco de dados
+        try:
+            schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.toon')
+
+            with open(schema_path, "r", encoding='utf-8') as file:
+                schema_data = file.read()
+                return f"Contexto atualizado com sucesso. Schema carregado com {len(schema_data.get('models', {}))} modelos."
+        except Exception as e:
+            return f"Erro ao atualizar contexto. Exceção: {str(e)}"
+
+    @staticmethod
+    def carregar_schema_json():
         # Carrega o esquema do banco de dados do arquivo schema.json
         try:
             schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.json')
@@ -157,14 +124,31 @@ class Conecta:
             return None
 
     @staticmethod
+    def carregar_schema_toon():
+        # Carrega o esquema do banco de dados do arquivo schema.toon
+        try:
+            schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'schema.toon')
+
+            with open(schema_path, "r", encoding='utf-8') as file:
+                schema_string = file.read()
+                return schema_string
+        except Exception as e:
+            print(f"Erro ao carregar schema: {str(e)}")
+            return None
+
+    @staticmethod
     def gerar_sql(pergunta):
         try:
-            model = Conecta.conectar_api()# conecta com gemini api
+            model = Conecta.conectar_api()  # conecta com gemini api
             if isinstance(model, str):  # Se retornou erro
                 return model
 
+            # # Verifica se houve alteração pelo migrations
+            # if Conecta.houve_alteracao_banco():
+            #     Conecta.atualizar_contexto()
+
             # Carrega o schema do banco de dados
-            schema_data = Conecta.carregar_schema()
+            schema_data = Conecta.carregar_schema_toon()
             if not schema_data:
                 return "Erro ao carregar o esquema do banco de dados."
 
@@ -179,19 +163,25 @@ class Conecta:
             1. Retorne APENAS UMA instrução SELECT válida
             2. NÃO use ponto e vírgula (;)
             3. FAÇA SOMENTE SELEÇÃO de dados (SELECT). NÃO use INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, EXEC, MERGE ou TRUNCATE
-            4. Para buscar por nome use: WHERE nome LIKE '%parte_do_nome%'
+            4. Para buscar por nome ou campos descritivos use: WHERE campo LIKE '%parte_do_texto%'
             5. SEMPRE selecione campos completos (ex: u.nome, não SUBSTRING ou similar)
             6. NÃO use funções que dividem strings em caracteres
             7. Máximo 5 colunas no SELECT
             8. Ignore campos padroes do django
-            9. Sinônimos comuns: usuario = participante = estudante = aluno; participação = frequência = presença;
+            9. Trate dados com letras maiusculas e minusculas igualmente (case insensitive)
+            10. Sinônimos comuns: usuario = participante = estudante = aluno; participação = frequência = presença;
 
             PERGUNTA: {pergunta}
 
             SQL:
             """
 
+            # total_tokens: 53
             response = model.generate_content(context_prompt)
+            tokens_lista = str(model.count_tokens(contents=context_prompt + response.text)).split(' ')
+            Conecta.todos_tokens += int(tokens_lista[1])
+            print("Conectado ao Gemini 2.5 Flash para aplicar consulta.",
+                  f"Total tokens usados: {Conecta.todos_tokens}")
             sql_resposta = response.text.strip()
 
             # Remove possíveis marcadores de código markdown
@@ -217,7 +207,7 @@ class Conecta:
             return erro
 
     @staticmethod
-    def checar_consulta_segura(sql): #NAO ALTERAR, REUTILIZAR
+    def checar_consulta_segura(sql):  # NAO ALTERAR, REUTILIZAR
         sql = sql.strip().lower()
 
         # Primeiro, verifica se a consulta começa com SELECT ou WITH
@@ -239,7 +229,7 @@ class Conecta:
         return True
 
     @staticmethod
-    def executar_sql(sql): #NAO ALTERAR, REUTILIZAR
+    def executar_sql(sql):  # NAO ALTERAR, REUTILIZAR
         try:
             # Verifica se a consulta é segura
             if not Conecta.checar_consulta_segura(sql):
@@ -341,27 +331,74 @@ class Conecta:
         })
         return template.render(context)
 
+    ####### PARTE DO ESPECIALISTA EM NUTRICAO #######
+
     @staticmethod
-    def houve_alteracao_banco():
+    def montar_json(medicamentos, tipo_diabetes, bolus_alimentar, bolus_correcao, glicemia_meta, glicemia_atual,
+                    descricao_alimentacao):
+        """
+        Monta um JSON com as informações fornecidas.
+        """
+        contexto = {
+            "medicamentos": medicamentos,
+            "tipo_diabetes": tipo_diabetes,
+            "bolus_alimentar": bolus_alimentar,
+            "bolus_correcao": bolus_correcao,
+            "glicemia_meta": glicemia_meta,
+            "glicemia_atual": glicemia_atual,
+            "descricao_alimentacao": descricao_alimentacao
+        }
+        return json.dumps(contexto, indent=4)
+
+    @staticmethod
+    def desmontar_json(resposta_json):
+        """
+        Desmonta o JSON da resposta e retorna os valores.
+        """
+        data = json.loads(resposta_json)
+        lista_alimentos = data.get("lista_alimentos", [])
+        calorias = data.get("total_calorias")
+        carboidratos = data.get("total_carboidratos")
+        qtd_insulina = data.get("quantidade_insulina_recomendada")
+        nome_insulina = data.get("nome_insulina", "")
+
+        return lista_alimentos, carboidratos, calorias, qtd_insulina, nome_insulina
+
+    @staticmethod
+    def gerar_recomendacoes(contexto_json):
         try:
-            connection = connections['default']
-            executor = MigrationExecutor(connection)
+            client = Conecta.conectar_api()  # conecta com gemini api
+            if isinstance(client, str):  # Se retornou erro
+                return client
 
-            # Pega as migrações aplicadas e as pendentes
-            applied_migrations = executor.loader.applied_migrations
-            all_migrations = executor.loader.graph.nodes.keys()
+            # Define the expected role for the AI - Optimized for conciseness
+            papel_esperado_ia = "Nutricionista especializada em contagem de carboidratos, calorias e cálculo de insulina."
 
-            # Diferença indica migrações pendentes
-            pending = set(all_migrations) - set(applied_migrations)
+            # Define the expected response format from the AI - Optimized for conciseness
+            resposta_desejada = "Retorne SOMENTE um JSON com um único objeto com o nome dos alimentos, quantidade de carboidrato, quantidade de caloria, quantidade de insulina necessária e o nome da insulina a ser utilizada."
 
-            if pending:
-                print("Há migrações pendentes:")
-                for mig in pending:
-                    print(mig)
-                return True
-            else:
-                print("Todas as migrações estão aplicadas.")
-                return False
+            exemplo_json = '{"lista_alimentos": "", "total_carboidratos": , "total_calorias": , "quantidade_insulina_recomendada": , "nome_insulina": ""}'
+
+            # Construct the prompt using f-strings for clarity and efficiency
+            # The context_json is included here, and its size will impact token usage
+            prompt = f"""
+                Papel: {papel_esperado_ia}
+
+                Contexto: {contexto_json}
+
+                Resposta: {resposta_desejada}
+
+                Exemplo de JSON esperado: {exemplo_json}
+                """
+
+            response = client.generate_content(prompt)
+
+            # Extract and clean the JSON part from the response
+            resposta_json = response.candidates[0].content.parts[0].text.strip().strip('```json').strip('```')
+            total_tokens = client.count_tokens(contents=prompt + resposta_json)
+
+            return resposta_json, total_tokens
+
         except Exception as e:
-            print('Erro', e)
-            return False
+            erro = f"Não foi possível conectar no servidor para gerar recomendações. Por favor, tente novamente mais tarde. Erro: {str(e)}"
+            return erro, 0
