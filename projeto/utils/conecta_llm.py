@@ -41,6 +41,7 @@ class Conecta:
 
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel('gemini-2.5-flash')
+            # model = genai.Client()
             tokens_lista = str(model.count_tokens(contents="Conexão inicial Gemini 2.5 Flash")).split(' ')
             Conecta.todos_tokens += int(tokens_lista[1])
             # print("Conectado ao Gemini 2.5 Flash com sucesso.", f"Total tokens usados: {Conecta.todos_tokens}")
