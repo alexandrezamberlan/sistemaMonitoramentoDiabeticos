@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 from django.db import models
 from django.urls import reverse
-from .conecta_llm import Conecta
+from utils.conecta_llm import Conecta
 from utils.gerador_hash import gerar_hash
 import json
 

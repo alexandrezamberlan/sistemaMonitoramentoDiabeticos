@@ -8,10 +8,11 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
 
 from .forms import BuscaRelatorioForm
+
+from utils.conecta_llm import Conecta
 from utils.decorators import LoginRequiredMixin
 
 from .models import Relatorio
-from .conecta_llm import Conecta
 
 
 class RelatorioListView(LoginRequiredMixin, ListView):
